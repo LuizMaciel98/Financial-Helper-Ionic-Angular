@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Minha Agenda
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+
+  <div class="ion-text-center">
+    <ion-button (click)="navigateToInsertBill()">Inserir uma conta</ion-button>
+  </div>
+
+  <div class="ion-padding">
+    <ion-calendar [(ngModel)]="date"
+      (onChange)="onChange($event)"
+      [options]="optionsMulti"
+      [type]="type"
+      [format]="'YYYY-MM-DD'">
+    </ion-calendar>
+  </div>
+</ion-content>

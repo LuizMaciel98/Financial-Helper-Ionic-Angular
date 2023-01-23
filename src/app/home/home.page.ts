@@ -33,6 +33,10 @@ export class HomePage {
     // this.openCalendar();
   }
 
+  navigateToListBill() {
+    this.router.navigate(['/list-bill']);
+  }
+
   navigateToInsertBill() {
     this.router.navigate(['/insert-bill']);
   }

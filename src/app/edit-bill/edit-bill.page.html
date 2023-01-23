@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>edit-bill</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form>
+    <ion-item>
+      <ion-label>Name</ion-label>
+      <ion-input [(ngModel)]="bill.name" name="name"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Due Date</ion-label>
+      <ion-datetime [(ngModel)]="bill.dueDate" name="dueDate"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label>Price</ion-label>
+      <ion-input [(ngModel)]="bill.price" name="price"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Paid</ion-label>
+      <ion-checkbox [(ngModel)]="bill.paid" name="paid"></ion-checkbox>
+    </ion-item>
+    <ion-item>
+      <ion-label>Category</ion-label>
+      <ion-input [(ngModel)]="bill.category" name="category"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Payment Date</ion-label>
+      <ion-datetime [(ngModel)]="bill.paymentDate" name="paymentDate"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label>Reminder</ion-label>
+      <ion-checkbox [(ngModel)]="bill.reminder" name="reminder"></ion-checkbox>
+    </ion-item>
+    <ion-item>
+      <ion-label>Notes</ion-label>
+      <ion-textarea [(ngModel)]="bill.notes" name="notes"></ion-textarea>
+    </ion-item>
+    <ion-button (click)="updateBill()">Update</ion-button>
+  </form>
+</ion-content>

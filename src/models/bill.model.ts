@@ -7,4 +7,5 @@ export interface Bill {
     paymentDate: Date;
     reminder: boolean;
     notes: string;
+    primaryKey: string;
 }

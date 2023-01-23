@@ -19,6 +19,14 @@ const routes: Routes = [
     path: 'insert-bill',
     loadChildren: () => import('./insert-bill/insert-bill.module').then( m => m.InsertBillPageModule)
   },
+  {
+    path: 'list-bill',
+    loadChildren: () => import('./list-bill/list-bill.module').then( m => m.ListBillPageModule)
+  },
+  {
+    path: 'edit-bill',
+    loadChildren: () => import('./edit-bill/edit-bill.module').then( m => m.EditBillPageModule)
+  },
 ];
 
 @NgModule({

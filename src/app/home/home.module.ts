@@ -6,6 +6,10 @@ import { RouterModule } from '@angular/router';
 import { HomePage } from './home.page';
 // Calendar UI Module
 import { CalendarModule } from 'ion2-calendar';
+import { BillService } from '../../services/bill.service';
+import { SQLite } from '@ionic-native/sqlite/ngx';
+import { HttpClientModule } from '@angular/common/http';
+import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 
 @NgModule({
   imports: [
@@ -18,8 +22,15 @@ import { CalendarModule } from 'ion2-calendar';
         component: HomePage
       }
     ]),
-    CalendarModule
+    CalendarModule,
+    HttpClientModule
   ],
-  declarations: [HomePage]
+  providers: [
+    BillService,
+    SQLite,
+    SQLitePorter
+  ],
+  declarations: [HomePage],
+
 })
 export class HomePageModule {}

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { Bill } from '../../models/bill.model';
-import { Storage } from '@ionic/storage';
+import { BillService } from '../../services/bill.service';
 
 @Component({
   selector: 'app-list-bill',
@@ -16,20 +16,30 @@ export class ListBillPage implements OnInit {
   showTableItems = false;
   defaultListView = 'List';
   
-  constructor(private storage: Storage, private navCtrl: NavController) {
+  constructor(private navCtrl: NavController, public billService: BillService) {
     this.bills = [];
+    this.loadBills();
   }
 
   async ngOnInit() {
-    await this.storage.create();
-    const keys = await this.storage.keys();
-    console.log(keys);
-    for (const key of keys) {
-        const value = await this.storage.get(key);
-        value.primaryKey = key;
-        console.log(value);
-        this.bills.push(value);
-    }
+    this.loadBills();
+  }
+
+  ionViewWillEnter() {
+    this.loadBills();
+  }
+
+  async loadBills() {
+    this.billService.getBills().then(bills => this.bills = bills as Bill[]);
+    // await this.storage.create();
+    // const keys = await this.storage.keys();
+    // console.log(keys);
+    // for (const key of keys) {
+    //     const value = await this.storage.get(key);
+    //     value.primaryKey = key;
+    //     console.log(value);
+    //     this.bills.push(value);
+    // }
   }
 
   changeListView(event: any){
@@ -44,10 +54,10 @@ export class ListBillPage implements OnInit {
   }
 
   editBill(primaryKey: any) {
-    console.log(primaryKey);
-    this.navCtrl.navigateForward(['/edit-bill'], {
-      queryParams: { primaryKey }
-    });
+    // console.log(primaryKey);
+    // this.navCtrl.navigateForward(['/edit-bill'], {
+    //   queryParams: { primaryKey }
+    // });
   }
 
 }

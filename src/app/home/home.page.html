@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Minha Agenda
+      <!-- Minha Agenda -->
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -12,12 +12,65 @@
     <ion-button (click)="navigateToListBill()">Lista de contas</ion-button>
   </div>
 
-  <div class="ion-padding">
+  <!-- <div class="ion-padding">
     <ion-calendar [(ngModel)]="date"
       (onChange)="onChange($event)"
       [options]="optionsMulti"
       [type]="type"
       [format]="'YYYY-MM-DD'">
     </ion-calendar>
-  </div>
+  </div> -->
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Visão Geral</ion-card-title>
+      <!-- <ion-card-subtitle>Card Subtitle</ion-card-subtitle> -->
+
+    </ion-card-header>
+
+    
+  
+    <ion-card-content class="ion-text-center">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-button fill="clear" (click)="navigateToPreviousMonth()">
+              <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+            </ion-button>
+          </ion-col>
+          <ion-col class="ion-padding-vertical">
+            <h2 class="ion-text-capitalize">{{verifiedMonth}}</h2>
+          </ion-col>
+          <ion-col>
+            <ion-button fill="clear" (click)="navigateToNextMonth()">
+              <ion-icon slot="icon-only" name="arrow-forward-outline"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+
+
+      <ion-item>
+        <ion-label>
+          <h1>Receitas</h1>
+          <p>R$ 1.000</p>
+        </ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>
+          <h1>Despesas</h1>
+          <p>R$ 1.000</p>
+        </ion-label>
+      </ion-item>
+
+      <!-- <ion-item>
+        <ion-label>
+          <h1>H1 Heading</h1>
+          <p>Paragraph</p>
+        </ion-label>
+      </ion-item> -->
+    </ion-card-content>
+  </ion-card>
 </ion-content>

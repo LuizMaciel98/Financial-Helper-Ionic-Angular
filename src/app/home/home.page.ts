@@ -129,13 +129,13 @@ export class HomePage implements OnInit {
     this.choosedDate.setMonth(this.choosedDate.getMonth() + 1);
     this.choosedMonth = this.choosedDate.toLocaleString('default', { month: 'long' });
 
-    //TO DO CALCULATE RECEITAS AND DESPESAS
+    this.calculateChoosedMonth();
   }
   
   navigateToPreviousMonth() {
     this.choosedDate.setMonth(this.choosedDate.getMonth() - 1);
     this.choosedMonth = this.choosedDate.toLocaleString('default', { month: 'long' });
-
-    //TO DO CALCULATE RECEITAS AND DESPESAS
+    
+    this.calculateChoosedMonth();
   }
 }

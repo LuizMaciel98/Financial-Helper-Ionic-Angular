@@ -39,7 +39,7 @@
             </ion-button>
           </ion-col>
           <ion-col class="ion-padding-vertical">
-            <h2 class="ion-text-capitalize">{{verifiedMonth}}</h2>
+            <h2 class="ion-text-capitalize">{{choosedMonth}}</h2>
           </ion-col>
           <ion-col>
             <ion-button fill="clear" (click)="navigateToNextMonth()">
@@ -61,7 +61,7 @@
       <ion-item>
         <ion-label>
           <h1>Despesas</h1>
-          <p>R$ 1.000</p>
+          <p>{{choosedMonthExpenses}}</p>
         </ion-label>
       </ion-item>
 

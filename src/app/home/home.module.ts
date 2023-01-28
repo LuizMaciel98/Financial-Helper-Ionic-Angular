@@ -10,6 +10,7 @@ import { BillService } from '../../services/bill.service';
 import { SQLite } from '@ionic-native/sqlite/ngx';
 import { HttpClientModule } from '@angular/common/http';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
+import { CurrencyPipe } from '@angular/common';
 
 @NgModule({
   imports: [
@@ -28,7 +29,8 @@ import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
   providers: [
     BillService,
     SQLite,
-    SQLitePorter
+    SQLitePorter,
+    CurrencyPipe
   ],
   declarations: [HomePage],
 

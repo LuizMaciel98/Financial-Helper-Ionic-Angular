@@ -11,6 +11,7 @@ export class BillService {
     }
 
     createDatabase() {
+        console.log('createDatabase');
         this.sqlite.create({
             name: 'data.db',
             location: 'default'
@@ -18,15 +19,15 @@ export class BillService {
             this.db = db;
             db.executeSql(`
                 CREATE TABLE IF NOT EXISTS bills (
-                    primaryKey TEXT PRIMARY KEY,
+                    primaryKey INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT,
-                    dueDate DATE,
+                    dueDate DATE CHECK (dueDate >= '1000-01-01' AND dueDate <= '9999-12-31'),
                     price REAL,
                     paid BOOLEAN,
                     category TEXT,
                     paymentDate DATE,
                     reminder BOOLEAN,
-                    notes TEXT
+                    notes TEXT            
                 )
             `, []);
         }).catch(error => console.error(error));
@@ -37,7 +38,9 @@ export class BillService {
         if(!this.db) {
             this.createDatabase();
         }
-        const data = [bill.primaryKey, bill.name, bill.dueDate, bill.price, bill.paid, bill.category, bill.paymentDate, bill.reminder, bill.notes];
+        let dueDateString = bill.dueDate?.toString();
+        let dueDateFormatted = dueDateString?.split('/')[2] + '-' + dueDateString?.split('/')[1] + '-' + dueDateString?.split('/')[0];
+        const data = [bill.primaryKey, bill.name, dueDateFormatted, bill.price, bill.paid, bill.category, bill.paymentDate, bill.reminder, bill.notes];
         if(this.db){
             try {
                 console.log('TRIED TO INSERT');
@@ -48,25 +51,74 @@ export class BillService {
         }
     }
 
-    async getBills(): Promise<Bill[] | null> {
+    // Read
+    // async getBills(): Promise<Bill[] | null> {
+    //     if (!this.db) {
+    //         this.createDatabase();
+    //     }
+    //     const bills: Bill[] = [];
+    //     if (this.db) {
+    //         try {
+    //             const result = await this.db.executeSql('SELECT * FROM bills', []);
+    //             for (let i = 0; i < result.rows.length; i++) {
+    //                 bills.push(result.rows.item(i));
+    //             }
+    //             return bills;
+    //         } catch (error) {
+    //             console.error(error);
+    //             return null;
+    //         }
+    //     } else {
+    //         return null;
+    //     }
+    // }
+
+    async getBills(query: any): Promise<Bill[] | null> {
+        console.log('getBills');
         if (!this.db) {
             this.createDatabase();
         }
         const bills: Bill[] = [];
         if (this.db) {
             try {
-                const result = await this.db.executeSql('SELECT * FROM bills', []);
+                let sql = 'SELECT * FROM bills';
+                let values: any[] = [];
+                let result: any = null;
+                console.log('sql: ' + sql);
+                console.log('query: ' + query);
+                console.log(JSON.stringify(query));
+                if(query == 'All'){ 
+                    result = await this.db.executeSql(sql, []);
+                } else {
+                    sql = sql + ' WHERE ';
+                    Object.keys(query).forEach((key, index) => {
+                        if(key === "dueDate") {
+                            sql += ` strftime('%m', ${key}) = ? AND strftime('%Y', ${key}) = ?`;
+                            values.push(query[key].month);
+                            values.push(query[key].year);
+                        } else {
+                            sql += ` ${key} = ?`;
+                            values.push(query[key]);
+                        }
+                        if (index < Object.keys(query).length - 1) {
+                            sql += ' AND';
+                        }
+                    });
+                    console.log('sql: ' + sql);
+                    console.log('values: ' + JSON.stringify(values));
+                    result = await this.db.executeSql(sql, values);
+                }
+                console.log('result: ' + JSON.stringify(result));
                 for (let i = 0; i < result.rows.length; i++) {
                     bills.push(result.rows.item(i));
                 }
+                console.log('bills returned : ' + JSON.stringify(bills));
                 return bills;
             } catch (error) {
                 console.error(error);
-                return null;
             }
-        } else {
-            return null;
         }
+        return null;
     }
     
     // Update

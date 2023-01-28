@@ -30,16 +30,7 @@ export class ListBillPage implements OnInit {
   }
 
   async loadBills() {
-    this.billService.getBills().then(bills => this.bills = bills as Bill[]);
-    // await this.storage.create();
-    // const keys = await this.storage.keys();
-    // console.log(keys);
-    // for (const key of keys) {
-    //     const value = await this.storage.get(key);
-    //     value.primaryKey = key;
-    //     console.log(value);
-    //     this.bills.push(value);
-    // }
+    this.billService.getBills('All').then(bills => this.bills = bills as Bill[]);
   }
 
   changeListView(event: any){

@@ -1,50 +1,41 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 import { Bill } from '../../models/bill.model';
-import { Storage } from '@ionic/storage';
-import { ToastController } from '@ionic/angular';
-
-import { BillService } from '../../services/bill.service';
-
+import { ActivatedRoute } from '@angular/router';
+import { NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { BillService } from '../../services/bill.service';
+import { tap } from 'rxjs/operators';
+import { Params } from '@angular/router';
+import { ToastController } from '@ionic/angular';
+import { BillFormComponent } from '../bill-form/bill-form.component';
 
 @Component({
   selector: 'app-insert-bill',
   templateUrl: './insert-bill.page.html',
   styleUrls: ['./insert-bill.page.scss'],
-  providers: [BillService],
+  providers: [BillService, BillFormComponent],
 })
 export class InsertBillPage {
 
-  billForm: FormGroup;
+  bill: Bill | any;
 
+  constructor(private router: Router, private toastController: ToastController, private billService: BillService) {
+    this.bill = new Bill();
 
-  constructor(private storage: Storage, private formBuilder: FormBuilder, private router: Router, private toastController: ToastController, private billService: BillService) {
-    this.billForm = this.formBuilder.group({
-      name: new FormControl(''),
-      dueDate: new FormControl(''),
-      price: new FormControl(''),
-      paid: new FormControl(false),
-      category: new FormControl(''),
-      paymentDate: new FormControl(''),
-      reminder: new FormControl(false),
-      notes: new FormControl('')
-    });
-
+    this.bill.name = '';
+    this.bill.dueDate = null;
+    this.bill.price = null;
+    this.bill.paid = false;
+    this.bill.category = '';
+    this.bill.paymentDate = null;
+    this.bill.reminder = false;
+    this.bill.notes = '';
   }
 
   async ngOnInit() {
-    // If using a custom driver:
-    // await this.storage.defineDriver(MyCustomDriver)
-    // await this.storage.create();
-
   }
 
-  async saveBill() {
-    const bill: Bill = this.billForm.value;
-    // await this.storage.set('bill'+new Date().getTime(), bill);
-    // this.getAllBills();
-
+  async onUpsertButtonClick(bill: Bill) {
     await this.billService.addBill(bill);
 
     this.router.navigate(['/home']);
@@ -57,13 +48,4 @@ export class InsertBillPage {
 
     await toast.present();
   }
-
-  // async getAllBills() {
-  //   const keys = await this.storage.keys();
-  //   for (const key of keys) {
-  //       const value = await this.storage.get(key);
-  //       console.log(value);
-  //   }
-  // }
-
 }

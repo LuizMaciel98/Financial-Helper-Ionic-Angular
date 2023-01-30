@@ -1,7 +1,7 @@
 export class Bill {
     name: string;
     dueDate: Date | null;
-    price: number;
+    price: number | null;
     paid: boolean;
     category: string;
     paymentDate: Date | null;
@@ -9,7 +9,7 @@ export class Bill {
     notes: string;
     primaryKey: string;
 
-    constructor() {
+    public constructor() {
         this.name = '';
         this.dueDate = null;
         this.price = 0;

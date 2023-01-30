@@ -5,51 +5,5 @@
 </ion-header>
 
 <ion-content>
-  <form [formGroup]="billForm">
-    <ion-item>
-      <ion-label position="floating">Name</ion-label>
-      <ion-input formControlName="name"></ion-input>
-    </ion-item>
-  
-    <ion-item>
-      <ion-label position="floating">Due Date</ion-label>
-      <!-- <ion-datetime formControlName="dueDate" id="datetime"></ion-datetime> -->
-      <ion-input formControlName="dueDate" type="text" mask="**/**/****" maxlength="10" ></ion-input>
-    </ion-item>
-  
-    <ion-item>
-      <ion-label position="floating">Price</ion-label>
-      <ion-input formControlName="price" type="number"></ion-input>
-    </ion-item>
-  
-    <ion-item>
-      <ion-label position="floating">Paid</ion-label>
-      <ion-checkbox formControlName="paid"></ion-checkbox>
-    </ion-item>
-  
-    <ion-item>
-      <ion-label position="floating">Category</ion-label>
-      <ion-input formControlName="category"></ion-input>
-    </ion-item>
-    
-    <ion-item>
-      <ion-label position="floating">Payment Date</ion-label>
-      <!-- <ion-datetime formControlName="paymentDate"></ion-datetime> -->
-      <ion-input formControlName="paymentDate" type="text" mask="**/**/****" maxlength="10" ></ion-input>
-    </ion-item>
-  
-    <ion-item>
-      <ion-label position="floating">Reminder</ion-label>
-      <ion-checkbox formControlName="reminder"></ion-checkbox>
-    </ion-item>
-  
-    <ion-item>
-      <ion-label position="floating">Notes</ion-label>
-      <ion-textarea formControlName="notes"></ion-textarea>
-    </ion-item>
-
-    <div class="ion-text-center">
-      <ion-button (click)="saveBill()">Salvar a conta</ion-button>
-    </div>
-  </form>
+  <app-bill-form (upsertBillEvent)="onUpsertButtonClick($event)" [bill]="bill" [isInsert]="true"></app-bill-form>
 </ion-content>

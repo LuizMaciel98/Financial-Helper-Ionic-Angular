@@ -1,0 +1,52 @@
+<ion-content>
+  <form [formGroup]="billForm">
+    <ion-item>
+      <ion-label position="floating">Nome</ion-label>
+      <ion-input [(ngModel)]="bill.name" formControlName="name"></ion-input>
+    </ion-item>
+  
+    <ion-item>
+      <ion-label position="floating">Data de vencimento</ion-label>
+      <!-- <ion-datetime formControlName="dueDate" id="datetime"></ion-datetime> -->
+      <ion-input [(ngModel)]="bill.dueDate" formControlName="dueDate" type="text" mask="**/**/****" maxlength="10" ></ion-input>
+    </ion-item>
+  
+    <ion-item>
+      <ion-label position="floating">Preço</ion-label>
+      <ion-input [(ngModel)]="bill.price" formControlName="price" type="number"></ion-input>
+    </ion-item>
+  
+    <ion-item>
+      <ion-label position="floating">Pago</ion-label>
+      <ion-checkbox [(ngModel)]="bill.paid" formControlName="paid"></ion-checkbox>
+    </ion-item>
+  
+    <ion-item>
+      <ion-label position="floating">Categoria</ion-label>
+      <ion-input [(ngModel)]="bill.category" formControlName="category"></ion-input>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label position="floating">Data de pagamento</ion-label>
+      <!-- <ion-datetime formControlName="paymentDate"></ion-datetime> -->
+      <ion-input [(ngModel)]="bill.paymentDate" formControlName="paymentDate" type="text" mask="**/**/****" maxlength="10" ></ion-input>
+    </ion-item>
+  
+    <ion-item>
+      <ion-label position="floating">Lembrete</ion-label>
+      <ion-checkbox [(ngModel)]="bill.reminder" formControlName="reminder"></ion-checkbox>
+    </ion-item>
+  
+    <ion-item>
+      <ion-label position="floating">Anotações</ion-label>
+      <ion-textarea [(ngModel)]="bill.notes" formControlName="notes"></ion-textarea>
+    </ion-item>
+
+    <div class="ion-text-center">
+
+      <ion-button *ngIf="isInsert === true" (click)="onUpsertButtonClick()">Salvar a conta</ion-button>
+      <ion-button *ngIf="isInsert === false" (click)="onUpsertButtonClick()">Atualizar a conta</ion-button>
+
+    </div>
+  </form>
+</ion-content>

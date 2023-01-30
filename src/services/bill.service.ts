@@ -7,17 +7,19 @@ export class BillService {
     private db: SQLiteObject | null = null;
 
     constructor(private sqlite: SQLite) {
-      this.createDatabase();
+        if(this.db == null){
+            this.createDatabase();
+        }
     }
 
-    createDatabase() {
+    async createDatabase() {
         console.log('createDatabase');
-        this.sqlite.create({
-            name: 'data.db',
-            location: 'default'
-        }).then((db: SQLiteObject) => {
-            this.db = db;
-            db.executeSql(`
+        if (!this.db) {
+            await this.sqlite.create({
+                name: 'data.db',
+                location: 'default'
+            }).then((db: SQLiteObject) => {
+                db.executeSql(`
                 CREATE TABLE IF NOT EXISTS bills (
                     primaryKey INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT,
@@ -28,19 +30,27 @@ export class BillService {
                     paymentDate DATE,
                     reminder BOOLEAN,
                     notes TEXT            
-                )
-            `, []);
-        }).catch(error => console.error(error));
+                    )
+                `, []);
+                this.db = db;
+                console.log('db inside createDatabase');
+                console.log(JSON.stringify(this.db));
+            }).catch(error => {
+                console.error(error);
+                console.error(JSON.stringify(error));
+            });
+        }
     }
 
     // Create
     async addBill(bill: Bill) {
         if(!this.db) {
-            this.createDatabase();
+            await this.createDatabase();
         }
         let dueDateString = bill.dueDate?.toString();
         let dueDateFormatted = dueDateString?.split('/')[2] + '-' + dueDateString?.split('/')[1] + '-' + dueDateString?.split('/')[0];
         const data = [bill.primaryKey, bill.name, dueDateFormatted, bill.price, bill.paid, bill.category, bill.paymentDate, bill.reminder, bill.notes];
+        console.log(JSON.stringify(dueDateFormatted));
         if(this.db){
             try {
                 console.log('TRIED TO INSERT');
@@ -75,9 +85,14 @@ export class BillService {
 
     async getBills(query: any): Promise<Bill[] | null> {
         console.log('getBills');
+        console.log('this.db');
+        console.log(JSON.stringify(this.db));
         if (!this.db) {
-            this.createDatabase();
+            await this.createDatabase();
+            console.log('1 after await createDatabase');
         }
+        console.log('2 after await createDatabase');
+        console.log(JSON.stringify(this.db));
         const bills: Bill[] = [];
         if (this.db) {
             try {
@@ -124,7 +139,7 @@ export class BillService {
     // Update
     async updateBill(bill: Bill) {
         if (!this.db) {
-            this.createDatabase();
+            await this.createDatabase();
         }
         if (this.db) {
             try {
@@ -139,7 +154,7 @@ export class BillService {
     // Delete
     async deleteBill(primaryKey: string) {
         if (!this.db) {
-            this.createDatabase();
+            await this.createDatabase();
         }
         if (this.db) {
             try {

@@ -1,39 +1,99 @@
 import { Component, OnInit } from '@angular/core';
 import { Bill } from '../../models/bill.model';
-import { Storage } from '@ionic/storage';
 import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { BillService } from '../../services/bill.service';
+import { tap } from 'rxjs/operators';
+import { Params } from '@angular/router';
+import { ToastController } from '@ionic/angular';
+import { BillFormComponent } from '../bill-form/bill-form.component';
 
 @Component({
   selector: 'app-edit-bill',
   templateUrl: './edit-bill.page.html',
   styleUrls: ['./edit-bill.page.scss'],
+  providers: [BillService, BillFormComponent]
 })
 export class EditBillPage {
 
   bill: Bill;
-  constructor(private storage: Storage, private route: ActivatedRoute, private navCtrl: NavController) {
+  // primaryKey: any;
+
+  constructor(private route: ActivatedRoute, private navCtrl: NavController, public billService: BillService, private toastController: ToastController) {
+    console.log('EditBillPage constructor');
     this.bill = Object();
     
-    this.route.queryParams.subscribe((params) => {
-      let primaryKey = params['primaryKey'];
-      console.log(primaryKey);
-      this.storage.get(primaryKey).then((bill) => {
-        console.log(bill);
-        this.bill = bill;
-      });
-    });
+    // this.primaryKey = this.getPrimaryKey();
+    
+    this.getBillFromDatabase();
+  }
+  
+  getPrimaryKey() {
+    console.log('getPrimaryKey');
+    let result;
+
+    // this.route.params.subscribe(params => {
+    //   console.log('primaryKey');
+    //   console.log(params['primaryKey']);
+    //   result = params['primaryKey'];
+    // });
+
+    
+
+    // this.route.queryParams.pipe(
+    //   tap((params: Params) => {
+    //     console.log('params');
+    //     console.log(JSON.stringify(params));
+    //     result = params['primaryKey'];
+    //     console.log('primaryKey');
+    //     console.log(JSON.stringify(result));
+    //   })
+    // );
+    return result;
   }
 
-  updateBill() {
-    this.route.queryParams.subscribe((params) => {
+  async getBillFromDatabase() {
+    console.log('getBillFromDatabase');
+    let result: Bill = new Bill();
+
+    this.route.queryParams.subscribe(params => {
       let primaryKey = params['primaryKey'];
-      this.storage.set(primaryKey, this.bill).then(() => {
-        console.log('Bill updated!');
+
+      let query = {
+        primaryKey: primaryKey
+      };
+
+      console.log('query');
+      console.log(JSON.stringify(query));
+
+      this.billService.getBills(query).then((bills) => {
+        console.log('bills');
+        console.log(JSON.stringify(bills));
+        if(bills != undefined && bills != null){
+          result = bills[0] as Bill;
+          this.bill = result;
+          console.log(result);
+          console.log(JSON.stringify(result));
+        }
       });
     });
+    
+    return result;
+  }
+
+  async onUpsertButtonClick(bill: Bill) {
+
+    await this.billService.updateBill(bill);
 
     this.navCtrl.navigateForward(['/list-bill']);
+
+    const toast = await this.toastController.create({
+      message: 'Conta atualizada!',
+      duration: 1500,
+      position: 'top'
+    });
+
+    await toast.present();
   }
 }

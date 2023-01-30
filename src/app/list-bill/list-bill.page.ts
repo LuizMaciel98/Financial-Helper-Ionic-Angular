@@ -45,10 +45,12 @@ export class ListBillPage implements OnInit {
   }
 
   editBill(primaryKey: any) {
-    // console.log(primaryKey);
-    // this.navCtrl.navigateForward(['/edit-bill'], {
-    //   queryParams: { primaryKey }
-    // });
+    console.log('editBill');
+    console.log(primaryKey);
+    console.log(JSON.stringify(primaryKey));
+    this.navCtrl.navigateForward(['/edit-bill'], {
+      queryParams: { primaryKey: primaryKey }
+    });
   }
 
 }

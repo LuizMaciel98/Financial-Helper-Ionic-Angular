@@ -12,10 +12,6 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'home-calendar',
-    loadChildren: () => import('./home-calendar/home-calendar.module').then( m => m.HomeCalendarPageModule)
-  },
-  {
     path: 'insert-bill',
     loadChildren: () => import('./insert-bill/insert-bill.module').then( m => m.InsertBillPageModule)
   },

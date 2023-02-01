@@ -1,0 +1,31 @@
+<ion-content>
+  <form [formGroup]="revenueForm">
+    <ion-item>
+      <ion-label>Nome:</ion-label>
+      <ion-input [(ngModel)]="revenue.name" name="name"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Tipo:</ion-label>
+      <ion-select [(ngModel)]="revenue.type" name="type">
+        <ion-select-option value="salary">Salário</ion-select-option>
+        <ion-select-option value="others">Outros</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Valor:</ion-label>
+      <ion-input type="number" [(ngModel)]="revenue.amount" name="amount"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Data:</ion-label>
+      <ion-datetime [(ngModel)]="revenue.date" name="date"></ion-datetime>
+    </ion-item>
+
+    <div class="ion-text-center">
+      <ion-button *ngIf="isInsert === true" (click)="onUpsertButtonClick()">Salvar receita</ion-button>
+      <ion-button *ngIf="isInsert === false" (click)="onUpsertButtonClick()">Atualizar receita</ion-button>
+    </div>
+  </form>
+</ion-content>

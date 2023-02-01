@@ -1,4 +1,5 @@
 export class Bill {
+    primaryKey: string;
     name: string;
     dueDate: Date | null;
     price: number | null;
@@ -7,9 +8,9 @@ export class Bill {
     paymentDate: Date | null;
     reminder: boolean;
     notes: string;
-    primaryKey: string;
 
     public constructor() {
+        this.primaryKey = '';
         this.name = '';
         this.dueDate = null;
         this.price = 0;
@@ -18,6 +19,5 @@ export class Bill {
         this.paymentDate = null;
         this.reminder = false;
         this.notes = '';
-        this.primaryKey = '';
     }
 }

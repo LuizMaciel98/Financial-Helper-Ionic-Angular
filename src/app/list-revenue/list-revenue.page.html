@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Lista de Receitas
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-list>
+  <ion-item>
+    <ion-select placeholder="Display Mode" value="{{defaultListView}}" (ionChange)="changeListView($event)">
+      <ion-select-option value="List">List</ion-select-option>
+      <ion-select-option value="Table">Table</ion-select-option>
+    </ion-select>
+  </ion-item>
+</ion-list>
+<ion-content>
+  <ion-list *ngIf="showListItems">
+    <ion-item *ngFor="let revenue of revenues">
+      <ion-label>
+        <h2>{{ revenue.name }}</h2>
+        <p>Type: {{ revenue.type }}</p>
+        <p>Amount: {{ revenue.amount }}</p>
+        <p>Date: {{ revenue.date }}</p>
+        <ion-button (click)="editRevenue(revenue.primaryKey)">Edit Revenue</ion-button>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+<ion-grid *ngIf="showTableItems">
+<ion-row>
+<ion-col>Name</ion-col>
+<ion-col>Type</ion-col>
+<ion-col>Amount</ion-col>
+<ion-col>Date</ion-col>
+</ion-row>
+<ion-row *ngFor="let revenue of revenues">
+<ion-col>{{ revenue.name }}</ion-col>
+<ion-col>{{ revenue.type }}</ion-col>
+<ion-col>{{ revenue.amount }}</ion-col>
+<ion-col>{{ revenue.date }}</ion-col>
+</ion-row>
+</ion-grid>
+</ion-content>

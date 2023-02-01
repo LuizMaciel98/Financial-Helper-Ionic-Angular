@@ -1,17 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BillFormModule } from '../bill-form/bill-form.module';
+import { RevenueFormsModule } from '../revenue-form/revenue-form.module';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    BillFormModule
+    BillFormModule,
+    RevenueFormsModule,
   ],
   exports: [
     ReactiveFormsModule,
-    BillFormModule
+    BillFormModule,
+    RevenueFormsModule
   ]
 })
 export class SharedModule { }

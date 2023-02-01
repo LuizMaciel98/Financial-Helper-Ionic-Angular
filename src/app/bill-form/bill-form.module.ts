@@ -5,17 +5,17 @@ import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
-    IonicModule
-  ],
-  declarations: [
-    BillFormComponent
-  ],
-  exports: [
-    BillFormComponent
-  ]
+	imports: [
+		CommonModule,
+		ReactiveFormsModule,
+		FormsModule,
+		IonicModule
+	],
+	declarations: [
+		BillFormComponent
+	],
+	exports: [
+		BillFormComponent
+	]
 })
 export class BillFormModule { }

@@ -1,0 +1,11 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Criar receita
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <app-revenue-form (upsertBillEvent)="onUpsertButtonClick($event)" [revenue]="revenue" [isInsert]="true"></app-revenue-form>
+</ion-content>

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
-import { Bill } from '../models/bill.model';
+import { Revenue } from '../models/revenue.model';
 
 @Injectable()
-export class BillService {
+export class RevenueService {
     private db: SQLiteObject | null = null;
 
     constructor(private sqlite: SQLite) {
@@ -20,16 +20,12 @@ export class BillService {
                 location: 'default'
             }).then((db: SQLiteObject) => {
                 db.executeSql(`
-                CREATE TABLE IF NOT EXISTS bills (
+                CREATE TABLE IF NOT EXISTS revenues (
                     primaryKey INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT,
-                    dueDate DATE CHECK (dueDate >= '1000-01-01' AND dueDate <= '9999-12-31'),
-                    price REAL,
-                    paid BOOLEAN,
-                    category TEXT,
-                    paymentDate DATE CHECK (dueDate >= '1000-01-01' AND dueDate <= '9999-12-31'),
-                    reminder BOOLEAN,
-                    notes TEXT
+                    type TEXT,
+                    amount REAL,
+                    date DATE
                     )
                 `, []);
                 this.db = db;
@@ -43,18 +39,15 @@ export class BillService {
     }
 
     // Create
-    async addBill(bill: Bill) {
+    async addRevenue(revenue: Revenue) {
         if(!this.db) {
             await this.createDatabase();
         }
-        let dueDateString = bill.dueDate?.toString();
-        let dueDateFormatted = dueDateString?.split('/')[2] + '-' + dueDateString?.split('/')[1] + '-' + dueDateString?.split('/')[0];
-        const data = [bill.primaryKey, bill.name, dueDateFormatted, bill.price, bill.paid, bill.category, bill.paymentDate, bill.reminder, bill.notes];
-        console.log(JSON.stringify(dueDateFormatted));
+        const data = [revenue.type, revenue.amount, revenue.date];
         if(this.db){
             try {
                 console.log('TRIED TO INSERT');
-                return this.db.executeSql('INSERT INTO bills (primaryKey, name, dueDate, price, paid, category, paymentDate, reminder, notes) VALUES (?,?,?,?,?,?,?,?,?)', data)
+                return this.db.executeSql('INSERT INTO revenues (type, amount, date) VALUES (?,?,?)', data)
             } catch (error) {
                 console.error(error);
             }
@@ -62,8 +55,8 @@ export class BillService {
     }
 
     // Read
-    async getBills(query: any): Promise<Bill[] | null> {
-        console.log('getBills');
+    async getRevenues(query: any): Promise<Revenue[] | null> {
+        console.log('getRevenue');
         console.log('this.db');
         console.log(JSON.stringify(this.db));
         if (!this.db) {
@@ -72,21 +65,21 @@ export class BillService {
         }
         console.log('2 after await createDatabase');
         console.log(JSON.stringify(this.db));
-        const bills: Bill[] = [];
+        const revenue: Revenue[] = [];
         if (this.db) {
             try {
-                let sql = 'SELECT * FROM bills';
+                let sql = 'SELECT * FROM revenues';
                 let values: any[] = [];
                 let result: any = null;
                 console.log('sql: ' + sql);
                 console.log('query: ' + query);
                 console.log(JSON.stringify(query));
-                if(query == 'All'){ 
+                if (query == 'All') {
                     result = await this.db.executeSql(sql, []);
                 } else {
                     sql = sql + ' WHERE ';
                     Object.keys(query).forEach((key, index) => {
-                        if(key === "dueDate") {
+                        if (key === "date") {
                             sql += ` strftime('%m', ${key}) = ? AND strftime('%Y', ${key}) = ?`;
                             values.push(query[key].month);
                             values.push(query[key].year);
@@ -104,43 +97,46 @@ export class BillService {
                 }
                 console.log('result: ' + JSON.stringify(result));
                 for (let i = 0; i < result.rows.length; i++) {
-                    bills.push(result.rows.item(i));
+                    revenue.push(result.rows.item(i));
                 }
-                console.log('bills returned : ' + JSON.stringify(bills));
-                return bills;
+                console.log('revenue returned : ' + JSON.stringify(revenue));
+                return revenue;
             } catch (error) {
                 console.error(error);
             }
         }
         return null;
     }
-    
-    // Update
-    async updateBill(bill: Bill) {
+
+    // Update Revenue
+    async updateRevenue(revenue: Revenue) {
         if (!this.db) {
             await this.createDatabase();
         }
         if (this.db) {
             try {
-                const data = [bill.primaryKey, bill.name, bill.dueDate, bill.price, bill.paid, bill.category, bill.paymentDate, bill.reminder, bill.notes];
-                return this.db.executeSql(`UPDATE bills SET name=?, dueDate=?, price=?, paid=?, category=?, paymentDate=?, reminder=?, notes=? WHERE primaryKey=?`, data);
+                const data = [revenue.name, revenue.type, revenue.amount, revenue.date, revenue.primaryKey,];
+                return this.db.executeSql(`UPDATE revenues SET name=?, type=?, amount=?, date=? WHERE primaryKey=?`, data);
             } catch (error) {
                 console.error(error);
             }
         }
     }
-    
+
     // Delete
-    async deleteBill(primaryKey: string) {
-        if (!this.db) {
-            await this.createDatabase();
-        }
-        if (this.db) {
-            try {
-                return this.db.executeSql('DELETE FROM bills WHERE primaryKey=?', [primaryKey]);
-            } catch (error) {
-                console.error(error);
-            }
+    async deleteRevenue(primaryKey: string) {
+    if (!this.db) {
+        await this.createDatabase();
+    }
+    if (this.db) {
+        try {
+            return this.db.executeSql('DELETE FROM revenues WHERE primaryKey=?', [primaryKey]);
+        } catch (error) {
+            console.error(error);
         }
     }
+}
+
+
+
 }

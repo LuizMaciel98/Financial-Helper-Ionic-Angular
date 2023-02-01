@@ -2,34 +2,34 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { IonicModule } from '@ionic/angular';
-import { InsertBillPageRoutingModule } from './insert-bill-routing.module';
-import { InsertBillPage } from './insert-bill.page';
+import { InsertRevenuePageRoutingModule } from './insert-revenue-routing.module';
+import { InsertRevenuePage } from './insert-revenue.page';
 
 import { SQLite } from '@ionic-native/sqlite/ngx';
 import { HttpClientModule } from '@angular/common/http';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
-import { BillService } from '../../services/bill.service';
-// import { BillFormComponent } from '../bill-form/bill-form.component';
+import { RevenueService } from '../../services/revenue.service';
+// import { revenueFormComponent } from '../revenue-form/revenue-form.component';
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
-    InsertBillPageRoutingModule,
+    InsertRevenuePageRoutingModule,
     HttpClientModule,
     SharedModule
   ],
   providers: [
     SQLite, 
     SQLitePorter, 
-    BillService
+    RevenueService
   ],
   declarations: [
-    InsertBillPage
+    InsertRevenuePage
   ],
   exports: [
-    InsertBillPage
+    InsertRevenuePage
   ]
 })
-export class InsertBillPageModule {}
+export class InsertRevenuePageModule {}

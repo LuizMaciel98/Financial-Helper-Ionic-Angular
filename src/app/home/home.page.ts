@@ -29,15 +29,18 @@ export class HomePage implements OnInit {
   choosedMonth: string;
   choosedDate: Date;
   choosedMonthExpenses: number | any;
+  choosedMonthRevenues: number | any;
 
   billsChoosedMonth: Bill[];
 
   constructor(public modalCtrl: ModalController, private router: Router, public billService: BillService, private currencyPipe: CurrencyPipe) {
-    
+
     // this.choosedDate = this.calculateInitialChoosedDate();
     // this.choosedMonth = this.calculateInitialChoosedMonth();
 
-    this.choosedDate = new Date();
+    let date = new Date();
+
+    this.choosedDate = new Date(date.getFullYear(), date.getMonth(), 1);
     this.choosedMonth = this.choosedDate.toLocaleString('default', { month: 'long' });
 
     this.billsChoosedMonth = [];
@@ -47,24 +50,24 @@ export class HomePage implements OnInit {
   }
 
   async ngOnInit() {
-    this.calculateInitialChoosedDate();
+    // this.calculateInitialChoosedDate();
     this.calculateInitialChoosedMonth();
     this.calculateChoosedMonth();
   }
 
   ionViewWillEnter() {
-    this.calculateInitialChoosedDate();
+    // this.calculateInitialChoosedDate();
     this.calculateInitialChoosedMonth();
     this.calculateChoosedMonth();
   }
 
-  calculateInitialChoosedDate() {
-    if(this.choosedDate != undefined) {
-      this.choosedDate = new Date();
-    }
+  // calculateInitialChoosedDate() {
+  //   if(this.choosedDate == undefined |) {
+  //     this.choosedDate = new Date();
+  //   }
 
-    return this.choosedDate;
-  }
+  //   return this.choosedDate;
+  // }
 
   calculateInitialChoosedMonth() {
     if(this.choosedDate != undefined)
@@ -74,7 +77,16 @@ export class HomePage implements OnInit {
   }
 
   calculateMonthString() {
-    let month : string = (this.choosedDate.getMonth() + 1).toString();
+    console.log('calculateMonthString');
+    console.log('this.choosedDate : ' + JSON.stringify(this.choosedDate));
+    console.log('this.choosedDate.getMonth() : ' + JSON.stringify(this.choosedDate.getMonth()));
+
+    let monthNumer = (this.choosedDate.getMonth());
+    
+    // if(this.choosedDate.getMonth() == 0){
+    monthNumer = (this.choosedDate.getMonth() + 1);
+    // }
+    let month : string = monthNumer.toString();
     if(month.length == 1) {
       month = '0' + month;
     }
@@ -120,22 +132,38 @@ export class HomePage implements OnInit {
   navigateToListBill() {
     this.router.navigate(['/list-bill']);
   }
-
+  
   navigateToInsertBill() {
     this.router.navigate(['/insert-bill']);
   }
+  
+  navigateToInsertRevenue(){
+    this.router.navigate(['/insert-revenue']);
+  }
+  
+  navigateToListRevenue(){
+    this.router.navigate(['/list-revenue']);
+  }
 
   navigateToNextMonth() {
+
+    console.log('navigateToNextMonth');
+    console.log('choosedDate: ' + this.choosedDate);
+    console.log('choosedMonth: ' + this.choosedMonth);
+
     this.choosedDate.setMonth(this.choosedDate.getMonth() + 1);
     this.choosedMonth = this.choosedDate.toLocaleString('default', { month: 'long' });
 
+    console.log('choosedDate: ' + this.choosedDate);
+    console.log('choosedMonth: ' + this.choosedMonth);
+
     this.calculateChoosedMonth();
   }
-  
+
   navigateToPreviousMonth() {
     this.choosedDate.setMonth(this.choosedDate.getMonth() - 1);
     this.choosedMonth = this.choosedDate.toLocaleString('default', { month: 'long' });
-    
+
     this.calculateChoosedMonth();
   }
 }

@@ -10,6 +10,8 @@ import { ModalController } from '@ionic/angular';
 
 import { BillService } from '../../services/bill.service';
 import { Bill } from '../../models/bill.model';
+import { RevenueService } from '../../services/revenue.service';
+import { Revenue } from '../../models/revenue.model';
 import { CurrencyPipe } from '@angular/common';
 
 import { Router } from '@angular/router';
@@ -28,12 +30,23 @@ export class HomePage implements OnInit {
   // };
   choosedMonth: string;
   choosedDate: Date;
-  choosedMonthExpenses: number | any;
-  choosedMonthRevenues: number | any;
+  choosedMonthExpenses: number;
+  choosedMonthRevenues: number;
+  choosedMonthBalance: number;
+  formattedChoosedMonthExpenses: any;
+  formattedChoosedMonthRevenues: any;
+  formattedChoosedMonthBalance: any;
 
   billsChoosedMonth: Bill[];
+  revenuesChoosedMonth: Revenue[];
 
-  constructor(public modalCtrl: ModalController, private router: Router, public billService: BillService, private currencyPipe: CurrencyPipe) {
+  constructor(
+    public modalCtrl: ModalController, 
+    private router: Router, 
+    public billService: BillService, 
+    public revenueService: RevenueService, 
+    private currencyPipe: CurrencyPipe
+    ) {
 
     // this.choosedDate = this.calculateInitialChoosedDate();
     // this.choosedMonth = this.calculateInitialChoosedMonth();
@@ -44,7 +57,11 @@ export class HomePage implements OnInit {
     this.choosedMonth = this.choosedDate.toLocaleString('default', { month: 'long' });
 
     this.billsChoosedMonth = [];
+    this.revenuesChoosedMonth = [];
     this.choosedMonthExpenses = 0;
+    this.choosedMonthExpenses = 0;
+    this.choosedMonthRevenues = 0;
+    this.choosedMonthBalance = 0;
     
     this.calculateChoosedMonth();
   }
@@ -95,6 +112,18 @@ export class HomePage implements OnInit {
 
   async calculateChoosedMonth() {
     console.log('calculateChoosedMonth');
+    await this.calculateChoosedMonthExpenses();
+    await this.calculateChoosedMonthRevenues();
+    
+    console.log('this.choosedMonthRevenues - this.choosedMonthExpenses: ' + JSON.stringify(this.choosedMonthRevenues - this.choosedMonthExpenses));
+    console.log('this.choosedMonthBalance: ' + JSON.stringify(this.choosedMonthBalance));
+    this.choosedMonthBalance = this.choosedMonthRevenues - this.choosedMonthExpenses;
+    this.formattedChoosedMonthBalance = await this.currencyPipe.transform(this.choosedMonthBalance, 'BRL', true);
+    console.log('choosedMonthBalance: ' + JSON.stringify(this.choosedMonthBalance));
+  }
+
+  async calculateChoosedMonthExpenses() {
+    console.log('calculateChoosedMonthExpenses');
     
     // console.log(JSON.stringify(this.choosedDate));
     // console.log(JSON.stringify(this.choosedDate.getMonth()));
@@ -104,8 +133,8 @@ export class HomePage implements OnInit {
     let month = this.calculateMonthString();
     let year = this.choosedDate.getFullYear().toString();
     
-    console.log(JSON.stringify(month));
-    console.log(JSON.stringify(year));
+    // console.log(JSON.stringify(month));
+    // console.log(JSON.stringify(year));
     
 
     let query = {
@@ -122,12 +151,41 @@ export class HomePage implements OnInit {
     this.choosedMonthExpenses = 0;
     if(this.billsChoosedMonth != undefined && this.billsChoosedMonth.length > 0) {
       this.billsChoosedMonth.forEach(bill => {
-        this.choosedMonthExpenses = this.choosedMonthExpenses + bill.price;
+        if(bill.price != undefined && bill.price != null)
+          this.choosedMonthExpenses = this.choosedMonthExpenses + bill.price;
       });
     }
 
-    this.choosedMonthExpenses = this.currencyPipe.transform(this.choosedMonthExpenses, 'BRL', true);
+    this.formattedChoosedMonthExpenses = await this.currencyPipe.transform(this.choosedMonthExpenses, 'BRL', true);
+    console.log('choosedMonthExpenses: ' + JSON.stringify(this.choosedMonthExpenses));
   }
+
+  async calculateChoosedMonthRevenues() {
+    console.log('calculateChoosedMonthExpenses');
+
+    let month = this.calculateMonthString();
+    let year = this.choosedDate.getFullYear().toString();
+  
+    let query = {
+      date: {
+        month: month,
+        year: year
+      }
+    };
+    this.revenuesChoosedMonth = await this.revenueService.getRevenues(query) as Revenue[];
+  
+    this.choosedMonthRevenues = 0;
+    if(this.revenuesChoosedMonth != undefined && this.revenuesChoosedMonth.length > 0) {
+      this.revenuesChoosedMonth.forEach(revenue => {
+        if(revenue.amount != undefined && revenue.amount != null)
+          this.choosedMonthRevenues = this.choosedMonthRevenues + revenue.amount;
+      });
+    }
+  
+    this.formattedChoosedMonthRevenues = await this.currencyPipe.transform(this.choosedMonthRevenues, 'BRL', true);
+    console.log('choosedMonthRevenues: ' + JSON.stringify(this.choosedMonthRevenues));
+  }
+  
 
   navigateToListBill() {
     this.router.navigate(['/list-bill']);

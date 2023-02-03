@@ -1,27 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-// import {
-//   CalendarModal,
-//   CalendarModalOptions,
-//   DayConfig,
-//   CalendarResult,
-//   CalendarComponentOptions
-// } from 'ion2-calendar';
 
 import { BillService } from '../../services/bill.service';
 import { Bill } from '../../models/bill.model';
 import { RevenueService } from '../../services/revenue.service';
 import { Revenue } from '../../models/revenue.model';
 import { CurrencyPipe } from '@angular/common';
-
+import { Chart } from 'chart.js';
 import { Router } from '@angular/router';
+import { ActionSheetController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, AfterViewInit  {
   // daysConfiguration: DayConfig[];
   // date: string;
   // type: 'string'; // 'string' | 'js-date' | 'moment' | 'time' | 'object'
@@ -37,6 +31,12 @@ export class HomePage implements OnInit {
   formattedChoosedMonthRevenues: any;
   formattedChoosedMonthBalance: any;
 
+  @ViewChild('barCanvas') private barCanvas: ElementRef | any;
+  // @ViewChild('doughnutCanvas') private doughnutCanvas: ElementRef;
+  // @ViewChild('lineCanvas') private lineCanvas: ElementRef;
+
+  barChart: any;
+
   billsChoosedMonth: Bill[];
   revenuesChoosedMonth: Revenue[];
 
@@ -45,7 +45,8 @@ export class HomePage implements OnInit {
     private router: Router, 
     public billService: BillService, 
     public revenueService: RevenueService, 
-    private currencyPipe: CurrencyPipe
+    private currencyPipe: CurrencyPipe,
+    private actionSheetCtrl: ActionSheetController
     ) {
 
     // this.choosedDate = this.calculateInitialChoosedDate();
@@ -120,6 +121,9 @@ export class HomePage implements OnInit {
     this.choosedMonthBalance = this.choosedMonthRevenues - this.choosedMonthExpenses;
     this.formattedChoosedMonthBalance = await this.currencyPipe.transform(this.choosedMonthBalance, 'BRL', true);
     console.log('choosedMonthBalance: ' + JSON.stringify(this.choosedMonthBalance));
+
+    await this.barChartMethod();
+    this.barChart.chart.update();
   }
 
   async calculateChoosedMonthExpenses() {
@@ -223,5 +227,105 @@ export class HomePage implements OnInit {
     this.choosedMonth = this.choosedDate.toLocaleString('default', { month: 'long' });
 
     this.calculateChoosedMonth();
+  }
+
+  ngAfterViewInit() {
+    // this.barChartMethod();
+    // this.barChart.chart.update();
+  }
+
+  barChartMethod() {
+    // this.datasets = this.dataset.slice()
+    // Now we need to supply a Chart element reference with an object that defines the type of chart we want to use, and the type of data we want to display.
+    
+    if(this.barChart == null){
+      this.barChart = new Chart(this.barCanvas.nativeElement, {
+        type: 'bar',
+        data: {
+          labels: ['Receitas', 'Despesas'],
+          datasets: [{
+            // label: 'Despesas do mês',
+            data: [this.choosedMonthRevenues, this.choosedMonthExpenses],
+            backgroundColor: [
+              'rgba(121, 255, 70, 0.9)',
+              'rgba(255, 95, 86, 0.9)',
+            ],
+            borderColor: [
+              'rgba(121, 255, 70, 0.9)',
+              'rgba(255, 95, 86, 0.9)',
+            ],
+            borderWidth: 1
+          }]
+        }
+        // options: {
+        //   scales: {
+        //     yAxes: [{
+        //       ticks: {
+        //         beginAtZero: true
+        //       }
+        //     }]
+        //   }
+        // }
+      });
+    } else {
+      this.barChart.data.datasets.forEach((dataset : any) => {
+        dataset.data.pop();
+      });
+
+      this.barChart.update();
+
+      this.barChart.data.datasets = [{
+        // label: 'Despesas do mês',
+        data: [this.choosedMonthRevenues, this.choosedMonthExpenses],
+        backgroundColor: [
+          'rgba(121, 255, 70, 0.9)',
+          'rgba(255, 95, 86, 0.9)',
+        ],
+        borderColor: [
+          'rgba(121, 255, 70, 0.9)',
+          'rgba(255, 95, 86, 0.9)',
+        ],
+        borderWidth: 1
+      }];
+      this.barChart.update();
+    }
+  }
+
+  testButton() {
+    console.log('testButton');
+  }
+
+  async presentActionSheet() {
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Criar novos itens',
+      // subHeader: 'Example subheader',
+      mode: 'ios',
+      buttons: [
+        {
+          text: 'Criar receita',
+          handler: () => {
+            this.navigateToInsertRevenue();
+          },
+        },
+        {
+          text: 'Criar conta',
+          handler: () => {
+            this.navigateToInsertBill();
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          data: {
+            action: 'cancel',
+          },
+        },
+      ],
+    });
+
+    await actionSheet.present();
+
+    const result = await actionSheet.onDidDismiss();
+    // this.result = JSON.stringify(result, null, 2);
   }
 }

@@ -12,6 +12,7 @@ import { SQLite } from '@ionic-native/sqlite/ngx';
 import { HttpClientModule } from '@angular/common/http';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { CurrencyPipe } from '@angular/common';
+import { NgChartsModule } from 'ng2-charts';
 
 @NgModule({
   imports: [
@@ -25,7 +26,8 @@ import { CurrencyPipe } from '@angular/common';
       }
     ]),
     CalendarModule,
-    HttpClientModule
+    HttpClientModule,
+    NgChartsModule
   ],
   providers: [
     BillService,

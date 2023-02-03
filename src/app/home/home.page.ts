@@ -16,12 +16,6 @@ import { ActionSheetController } from '@ionic/angular';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage implements OnInit, AfterViewInit  {
-  // daysConfiguration: DayConfig[];
-  // date: string;
-  // type: 'string'; // 'string' | 'js-date' | 'moment' | 'time' | 'object'
-  // optionsMulti: CalendarComponentOptions = {
-  //   daysConfig: this.getDaysConfig()
-  // };
   choosedMonth: string;
   choosedDate: Date;
   choosedMonthExpenses: number;
@@ -32,8 +26,6 @@ export class HomePage implements OnInit, AfterViewInit  {
   formattedChoosedMonthBalance: any;
 
   @ViewChild('barCanvas') private barCanvas: ElementRef | any;
-  // @ViewChild('doughnutCanvas') private doughnutCanvas: ElementRef;
-  // @ViewChild('lineCanvas') private lineCanvas: ElementRef;
 
   barChart: any;
 
@@ -48,9 +40,6 @@ export class HomePage implements OnInit, AfterViewInit  {
     private currencyPipe: CurrencyPipe,
     private actionSheetCtrl: ActionSheetController
     ) {
-
-    // this.choosedDate = this.calculateInitialChoosedDate();
-    // this.choosedMonth = this.calculateInitialChoosedMonth();
 
     let date = new Date();
 
@@ -68,24 +57,14 @@ export class HomePage implements OnInit, AfterViewInit  {
   }
 
   async ngOnInit() {
-    // this.calculateInitialChoosedDate();
     this.calculateInitialChoosedMonth();
     this.calculateChoosedMonth();
   }
 
   ionViewWillEnter() {
-    // this.calculateInitialChoosedDate();
     this.calculateInitialChoosedMonth();
     this.calculateChoosedMonth();
   }
-
-  // calculateInitialChoosedDate() {
-  //   if(this.choosedDate == undefined |) {
-  //     this.choosedDate = new Date();
-  //   }
-
-  //   return this.choosedDate;
-  // }
 
   calculateInitialChoosedMonth() {
     if(this.choosedDate != undefined)
@@ -95,15 +74,10 @@ export class HomePage implements OnInit, AfterViewInit  {
   }
 
   calculateMonthString() {
-    console.log('calculateMonthString');
-    console.log('this.choosedDate : ' + JSON.stringify(this.choosedDate));
-    console.log('this.choosedDate.getMonth() : ' + JSON.stringify(this.choosedDate.getMonth()));
-
     let monthNumer = (this.choosedDate.getMonth());
     
-    // if(this.choosedDate.getMonth() == 0){
     monthNumer = (this.choosedDate.getMonth() + 1);
-    // }
+
     let month : string = monthNumer.toString();
     if(month.length == 1) {
       month = '0' + month;
@@ -112,34 +86,19 @@ export class HomePage implements OnInit, AfterViewInit  {
   }
 
   async calculateChoosedMonth() {
-    console.log('calculateChoosedMonth');
     await this.calculateChoosedMonthExpenses();
     await this.calculateChoosedMonthRevenues();
     
-    console.log('this.choosedMonthRevenues - this.choosedMonthExpenses: ' + JSON.stringify(this.choosedMonthRevenues - this.choosedMonthExpenses));
-    console.log('this.choosedMonthBalance: ' + JSON.stringify(this.choosedMonthBalance));
     this.choosedMonthBalance = this.choosedMonthRevenues - this.choosedMonthExpenses;
     this.formattedChoosedMonthBalance = await this.currencyPipe.transform(this.choosedMonthBalance, 'BRL', true);
-    console.log('choosedMonthBalance: ' + JSON.stringify(this.choosedMonthBalance));
 
     await this.barChartMethod();
     this.barChart.chart.update();
   }
 
   async calculateChoosedMonthExpenses() {
-    console.log('calculateChoosedMonthExpenses');
-    
-    // console.log(JSON.stringify(this.choosedDate));
-    // console.log(JSON.stringify(this.choosedDate.getMonth()));
-    // console.log(JSON.stringify(this.choosedDate));
-    // console.log(JSON.stringify(this.choosedDate.getFullYear()));
-    
     let month = this.calculateMonthString();
     let year = this.choosedDate.getFullYear().toString();
-    
-    // console.log(JSON.stringify(month));
-    // console.log(JSON.stringify(year));
-    
 
     let query = {
       dueDate: {
@@ -161,12 +120,9 @@ export class HomePage implements OnInit, AfterViewInit  {
     }
 
     this.formattedChoosedMonthExpenses = await this.currencyPipe.transform(this.choosedMonthExpenses, 'BRL', true);
-    console.log('choosedMonthExpenses: ' + JSON.stringify(this.choosedMonthExpenses));
   }
 
   async calculateChoosedMonthRevenues() {
-    console.log('calculateChoosedMonthExpenses');
-
     let month = this.calculateMonthString();
     let year = this.choosedDate.getFullYear().toString();
   
@@ -187,7 +143,6 @@ export class HomePage implements OnInit, AfterViewInit  {
     }
   
     this.formattedChoosedMonthRevenues = await this.currencyPipe.transform(this.choosedMonthRevenues, 'BRL', true);
-    console.log('choosedMonthRevenues: ' + JSON.stringify(this.choosedMonthRevenues));
   }
   
 
@@ -208,16 +163,8 @@ export class HomePage implements OnInit, AfterViewInit  {
   }
 
   navigateToNextMonth() {
-
-    console.log('navigateToNextMonth');
-    console.log('choosedDate: ' + this.choosedDate);
-    console.log('choosedMonth: ' + this.choosedMonth);
-
     this.choosedDate.setMonth(this.choosedDate.getMonth() + 1);
     this.choosedMonth = this.choosedDate.toLocaleString('default', { month: 'long' });
-
-    console.log('choosedDate: ' + this.choosedDate);
-    console.log('choosedMonth: ' + this.choosedMonth);
 
     this.calculateChoosedMonth();
   }
@@ -235,8 +182,6 @@ export class HomePage implements OnInit, AfterViewInit  {
   }
 
   barChartMethod() {
-    // this.datasets = this.dataset.slice()
-    // Now we need to supply a Chart element reference with an object that defines the type of chart we want to use, and the type of data we want to display.
     
     if(this.barChart == null){
       this.barChart = new Chart(this.barCanvas.nativeElement, {
@@ -257,15 +202,6 @@ export class HomePage implements OnInit, AfterViewInit  {
             borderWidth: 1
           }]
         }
-        // options: {
-        //   scales: {
-        //     yAxes: [{
-        //       ticks: {
-        //         beginAtZero: true
-        //       }
-        //     }]
-        //   }
-        // }
       });
     } else {
       this.barChart.data.datasets.forEach((dataset : any) => {
@@ -326,6 +262,5 @@ export class HomePage implements OnInit, AfterViewInit  {
     await actionSheet.present();
 
     const result = await actionSheet.onDidDismiss();
-    // this.result = JSON.stringify(result, null, 2);
   }
 }

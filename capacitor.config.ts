@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'Finanças Inteligentes',
+  appId: 'io.ionic.financasinteligentes',
+  appName: 'Financial-Helper-Ionic-Angular',
   webDir: 'www',
   bundledWebRuntime: false
 };

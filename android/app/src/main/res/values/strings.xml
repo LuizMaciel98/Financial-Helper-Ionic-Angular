@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Finanças Inteligentes</string>
-    <string name="title_activity_main">Finanças Inteligentes</string>
-    <string name="package_name">io.ionic.starter</string>
-    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="app_name">Financial-Helper-Ionic-Angular</string>
+    <string name="title_activity_main">Financial-Helper-Ionic-Angular</string>
+    <string name="package_name">io.ionic.financasinteligentes</string>
+    <string name="custom_url_scheme">io.ionic.financasinteligentes</string>
 </resources>

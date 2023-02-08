@@ -4,8 +4,6 @@ import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HomePage } from './home.page';
-// Calendar UI Module
-import { CalendarModule } from 'ion2-calendar';
 import { BillService } from '../../services/bill.service';
 import { RevenueService } from '../../services/revenue.service';
 import { SQLite } from '@ionic-native/sqlite/ngx';
@@ -25,7 +23,6 @@ import { NgChartsModule } from 'ng2-charts';
         component: HomePage
       }
     ]),
-    CalendarModule,
     HttpClientModule,
     NgChartsModule
   ],

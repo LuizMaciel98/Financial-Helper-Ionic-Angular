@@ -188,19 +188,18 @@ export class HomePage implements OnInit, AfterViewInit  {
         type: 'bar',
         data: {
           labels: ['Receitas', 'Despesas'],
-          datasets: [{
-            // label: 'Despesas do mês',
-            data: [this.choosedMonthRevenues, this.choosedMonthExpenses],
-            backgroundColor: [
-              'rgba(121, 255, 70, 0.9)',
-              'rgba(255, 95, 86, 0.9)',
-            ],
-            borderColor: [
-              'rgba(121, 255, 70, 0.9)',
-              'rgba(255, 95, 86, 0.9)',
-            ],
-            borderWidth: 1
-          }]
+          datasets: this.getDataSets()
+        },
+        options: {
+          scales: {
+              y: {
+                  ticks: {
+                      callback: function(value, index, ticks) {
+                          return 'R$' + value;
+                      }
+                  }
+              }
+          }
         }
       });
     } else {
@@ -210,22 +209,32 @@ export class HomePage implements OnInit, AfterViewInit  {
 
       this.barChart.update();
 
-      this.barChart.data.datasets = [{
-        // label: 'Despesas do mês',
-        data: [this.choosedMonthRevenues, this.choosedMonthExpenses],
-        backgroundColor: [
-          'rgba(121, 255, 70, 0.9)',
-          'rgba(255, 95, 86, 0.9)',
-        ],
-        borderColor: [
-          'rgba(121, 255, 70, 0.9)',
-          'rgba(255, 95, 86, 0.9)',
-        ],
-        borderWidth: 1
-      }];
+      this.barChart.data.datasets = this.getDataSets();
       this.barChart.update();
     }
   }
+
+  getDataSets() {
+    let result = [
+      // datasets: [
+        {
+          data: [this.choosedMonthRevenues], 
+          label: 'Receitas',
+          backgroundColor: ['rgba(121, 255, 70, 0.9)'],
+          // borderWidth: 1
+        },
+        {
+          data: [this.choosedMonthExpenses], 
+          label: 'Despesas',
+          backgroundColor: ['rgba(255, 95, 86, 0.9)'],
+          // borderWidth: 1
+        },
+      // ]
+    ];
+
+    return result;
+  }
+
 
   testButton() {
     console.log('testButton');

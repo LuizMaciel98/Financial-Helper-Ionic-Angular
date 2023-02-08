@@ -16,22 +16,18 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2022",
-    "module": "es2022",
+    "target": "es2015",
+    "module": "es2020",
     "lib": [
-      "es2020", 
+      "es2018", 
       "dom"
     ],
-    "useDefineForClassFields": false,
-    "preserveConstEnums": true,
-    "types": ["node"]
+    "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  }
 }

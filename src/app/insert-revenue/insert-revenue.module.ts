@@ -8,7 +8,7 @@ import { InsertRevenuePage } from './insert-revenue.page';
 import { SQLite } from '@ionic-native/sqlite/ngx';
 import { HttpClientModule } from '@angular/common/http';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
-import { RevenueService } from '../../services/revenue.service';
+import { RevenueDataBase } from '../../dataBase/revenue.dataBase';
 // import { revenueFormComponent } from '../revenue-form/revenue-form.component';
 import { SharedModule } from '../shared/shared.module';
 
@@ -23,7 +23,7 @@ import { SharedModule } from '../shared/shared.module';
   providers: [
     SQLite, 
     SQLitePorter, 
-    RevenueService
+    RevenueDataBase
   ],
   declarations: [
     InsertRevenuePage

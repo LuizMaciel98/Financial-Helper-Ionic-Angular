@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { Revenue } from '../../models/revenue.model';
-import { RevenueService } from '../../services/revenue.service';
+import { RevenueDataBase } from '../../dataBase/revenue.dataBase';
 
 @Component({
   selector: 'app-list-revenue',
@@ -16,7 +16,7 @@ export class ListRevenuePage implements OnInit {
   showTableItems = false;
   defaultListView = 'List';
   
-  constructor(private navCtrl: NavController, public revenueService: RevenueService) {
+  constructor(private navCtrl: NavController, public revenueDataBase: RevenueDataBase) {
     this.revenues = [];
     this.loadRevenues();
   }
@@ -30,7 +30,7 @@ export class ListRevenuePage implements OnInit {
   }
 
   async loadRevenues() {
-    this.revenueService.getRevenues('All').then(revenues => this.revenues = revenues as Revenue[]);
+    this.revenueDataBase.readObjects('All').then(revenues => this.revenues = revenues as Revenue[]);
   }
 
   changeListView(event: any){

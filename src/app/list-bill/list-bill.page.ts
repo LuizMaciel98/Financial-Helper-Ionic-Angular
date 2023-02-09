@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { Bill } from '../../models/bill.model';
-import { BillService } from '../../services/bill.service';
+import { BillDataBase } from '../../dataBase/bill.dataBase';
 
 @Component({
   selector: 'app-list-bill',
@@ -16,7 +16,7 @@ export class ListBillPage implements OnInit {
   showTableItems = false;
   defaultListView = 'List';
   
-  constructor(private navCtrl: NavController, public billService: BillService) {
+  constructor(private navCtrl: NavController, public billDataBase: BillDataBase) {
     this.bills = [];
     this.loadBills();
   }
@@ -30,7 +30,7 @@ export class ListBillPage implements OnInit {
   }
 
   async loadBills() {
-    this.billService.getBills('All').then(bills => this.bills = bills as Bill[]);
+    this.billDataBase.readObjects('All').then(bills => this.bills = bills as Bill[]);
   }
 
   changeListView(event: any){

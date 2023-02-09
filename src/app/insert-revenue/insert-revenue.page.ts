@@ -3,7 +3,7 @@ import { Revenue } from '../../models/revenue.model';
 import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { RevenueService } from '../../services/revenue.service';
+import { RevenueDataBase } from '../../dataBase/revenue.dataBase';
 import { tap } from 'rxjs/operators';
 import { Params } from '@angular/router';
 import { ToastController } from '@ionic/angular';
@@ -13,13 +13,13 @@ import { RevenueFormComponent } from '../revenue-form/revenue-form.component';
   selector: 'app-insert-revenue',
   templateUrl: './insert-revenue.page.html',
   styleUrls: ['./insert-revenue.page.scss'],
-  providers: [RevenueService, RevenueFormComponent],
+  providers: [RevenueDataBase, RevenueFormComponent],
 })
 export class InsertRevenuePage implements OnInit {
 
   revenue: Revenue | any;
 
-  constructor(private router: Router, private toastController: ToastController, private revenueService: RevenueService) {
+  constructor(private router: Router, private toastController: ToastController, private revenueDataBase: RevenueDataBase) {
     this.revenue = new Revenue('', '', '', null, '');
   }
 
@@ -27,7 +27,7 @@ export class InsertRevenuePage implements OnInit {
   }
 
   async onUpsertButtonClick(revenue: Revenue) {
-    await this.revenueService.addRevenue(revenue);
+    await this.revenueDataBase.createObject(revenue);
 
     this.router.navigate(['/home']);
 

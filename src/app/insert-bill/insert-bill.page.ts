@@ -3,7 +3,7 @@ import { Bill } from '../../models/bill.model';
 import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { BillService } from '../../services/bill.service';
+import { BillDataBase } from '../../dataBase/bill.dataBase';
 import { tap } from 'rxjs/operators';
 import { Params } from '@angular/router';
 import { ToastController } from '@ionic/angular';
@@ -13,13 +13,13 @@ import { BillFormComponent } from '../bill-form/bill-form.component';
   selector: 'app-insert-bill',
   templateUrl: './insert-bill.page.html',
   styleUrls: ['./insert-bill.page.scss'],
-  providers: [BillService, BillFormComponent],
+  providers: [BillDataBase, BillFormComponent],
 })
 export class InsertBillPage {
 
   bill: Bill | any;
 
-  constructor(private router: Router, private toastController: ToastController, private billService: BillService) {
+  constructor(private router: Router, private toastController: ToastController, private billDataBase: BillDataBase) {
     this.bill = new Bill();
 
     this.bill.name = '';
@@ -36,7 +36,7 @@ export class InsertBillPage {
   }
 
   async onUpsertButtonClick(bill: Bill) {
-    await this.billService.addBill(bill);
+    await this.billDataBase.createObject(bill);
 
     this.router.navigate(['/home']);
 

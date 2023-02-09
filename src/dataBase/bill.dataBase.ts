@@ -45,7 +45,7 @@ export class BillDataBase implements DatabaseCRUD {
         }
     }
 
-    async creatObject(bill: Bill | any) {
+    async createObject(bill: Bill | any) {
         if(!this.db) {
             await this.createDatabase();
         }

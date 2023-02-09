@@ -3,7 +3,7 @@ import { Bill } from '../../models/bill.model';
 import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { BillService } from '../../services/bill.service';
+import { BillService } from '../../dataBase/bill.dataBase';
 import { tap } from 'rxjs/operators';
 import { Params } from '@angular/router';
 import { ToastController } from '@ionic/angular';

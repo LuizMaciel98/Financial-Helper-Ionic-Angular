@@ -40,7 +40,7 @@ export class RevenueDataBase implements DatabaseCRUD {
     }
 
     // Create
-    async addObject(revenue: Revenue | any) {
+    async createObject(revenue: Revenue | any) {
         if(!this.db) {
             await this.createDatabase();
         }
@@ -56,7 +56,7 @@ export class RevenueDataBase implements DatabaseCRUD {
     }
 
     // Read
-    async getObjects(query: any): Promise<Revenue[] | null> {
+    async readObjects(query: any): Promise<Revenue[] | null> {
         console.log('getRevenue');
         console.log('this.db');
         console.log(JSON.stringify(this.db));

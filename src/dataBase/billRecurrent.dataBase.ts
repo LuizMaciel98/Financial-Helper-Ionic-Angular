@@ -36,7 +36,7 @@ export class BillRecurrentDataBase implements DatabaseCRUD {
         }
     }
     
-    async creatObject(billRecurrent: BillRecurrent | any) {
+    async createObject(billRecurrent: BillRecurrent | any) {
         if (!this.db) {
             await this.createDatabase();
         }

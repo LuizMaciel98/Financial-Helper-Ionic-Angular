@@ -1,9 +1,9 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
-import { BillService } from '../../services/bill.service';
+import { BillService } from '../../dataBase/bill.dataBase';
 import { Bill } from '../../models/bill.model';
-import { RevenueService } from '../../services/revenue.service';
+import { RevenueService } from '../../dataBase/revenue.dataBase';
 import { Revenue } from '../../models/revenue.model';
 import { CurrencyPipe } from '@angular/common';
 import { Chart } from 'chart.js';
@@ -31,6 +31,9 @@ export class HomePage implements OnInit, AfterViewInit  {
 
   billsChoosedMonth: Bill[];
   revenuesChoosedMonth: Revenue[];
+
+  hasPastDueDate: boolean = true;
+  hasCloseDueDate: boolean = true;
 
   constructor(
     public modalCtrl: ModalController, 

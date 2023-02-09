@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { Revenue } from '../models/revenue.model';
+import { DatabaseCRUD } from '../interfaces/databaseCRUD';
 
 @Injectable()
-export class RevenueService {
+export class RevenueDataBase implements DatabaseCRUD {
     private db: SQLiteObject | null = null;
 
     constructor(private sqlite: SQLite) {
@@ -39,7 +40,7 @@ export class RevenueService {
     }
 
     // Create
-    async addRevenue(revenue: Revenue) {
+    async addObject(revenue: Revenue | any) {
         if(!this.db) {
             await this.createDatabase();
         }
@@ -55,7 +56,7 @@ export class RevenueService {
     }
 
     // Read
-    async getRevenues(query: any): Promise<Revenue[] | null> {
+    async getObjects(query: any): Promise<Revenue[] | null> {
         console.log('getRevenue');
         console.log('this.db');
         console.log(JSON.stringify(this.db));
@@ -109,7 +110,7 @@ export class RevenueService {
     }
 
     // Update Revenue
-    async updateRevenue(revenue: Revenue) {
+    async updateObjects(revenue: Revenue | any) {
         if (!this.db) {
             await this.createDatabase();
         }
@@ -124,7 +125,7 @@ export class RevenueService {
     }
 
     // Delete
-    async deleteRevenue(primaryKey: string) {
+    async deleteObject(primaryKey: string) {
     if (!this.db) {
         await this.createDatabase();
     }

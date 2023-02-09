@@ -8,6 +8,7 @@ export class Bill {
     paymentDate: Date | null;
     reminder: boolean;
     notes: string;
+    billRecurrent: string | null;
 
     public constructor() {
         this.primaryKey = '';
@@ -19,5 +20,6 @@ export class Bill {
         this.paymentDate = null;
         this.reminder = false;
         this.notes = '';
+        this.billRecurrent = null;
     }
 }

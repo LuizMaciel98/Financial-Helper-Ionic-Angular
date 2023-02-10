@@ -50,4 +50,8 @@ export class BillFormComponent implements OnInit {
     this.upsertBillEvent.emit(this.bill);
   }
 
+  testFunction(event: any) {
+    console.log(event);
+  }
+
 }

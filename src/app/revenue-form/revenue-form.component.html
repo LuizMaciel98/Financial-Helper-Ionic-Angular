@@ -2,12 +2,12 @@
   <form [formGroup]="revenueForm">
     <ion-item>
       <ion-label>Nome:</ion-label>
-      <ion-input [(ngModel)]="revenue.name" name="name"></ion-input>
+      <ion-input [(ngModel)]="revenue.name" formControlName="name"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label>Tipo:</ion-label>
-      <ion-select [(ngModel)]="revenue.type" name="type">
+      <ion-select [(ngModel)]="revenue.type" formControlName="type">
         <ion-select-option value="salary">Salário</ion-select-option>
         <ion-select-option value="others">Outros</ion-select-option>
       </ion-select>
@@ -15,12 +15,12 @@
 
     <ion-item>
       <ion-label>Valor:</ion-label>
-      <ion-input type="number" [(ngModel)]="revenue.amount" name="amount"></ion-input>
+      <ion-input [(ngModel)]="revenue.amount" formControlName="amount" type="number"></ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-label>Data:</ion-label>
-      <ion-datetime [(ngModel)]="revenue.date" name="date"></ion-datetime>
+      <ion-label position="floating">Data</ion-label>
+      <ion-input [(ngModel)]="revenue.date" formControlName="date" type="Date"></ion-input>
     </ion-item>
 
     <div class="ion-text-center">

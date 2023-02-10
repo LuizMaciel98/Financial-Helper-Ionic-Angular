@@ -3,7 +3,7 @@ import { Bill } from '../../models/bill.model';
 import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { BillService } from '../../dataBase/bill.dataBase';
+import { BillDataBase } from '../../dataBase/bill.dataBase';
 import { tap } from 'rxjs/operators';
 import { Params } from '@angular/router';
 import { ToastController } from '@ionic/angular';
@@ -13,14 +13,14 @@ import { BillFormComponent } from '../bill-form/bill-form.component';
   selector: 'app-edit-bill',
   templateUrl: './edit-bill.page.html',
   styleUrls: ['./edit-bill.page.scss'],
-  providers: [BillService, BillFormComponent]
+  providers: [BillDataBase, BillFormComponent]
 })
 export class EditBillPage {
 
   bill: Bill;
   // primaryKey: any;
 
-  constructor(private route: ActivatedRoute, private navCtrl: NavController, public billService: BillService, private toastController: ToastController) {
+  constructor(private route: ActivatedRoute, private navCtrl: NavController, public billDataBase: BillDataBase, private toastController: ToastController) {
     console.log('EditBillPage constructor');
     this.bill = Object();
     
@@ -67,7 +67,7 @@ export class EditBillPage {
       console.log('query');
       console.log(JSON.stringify(query));
 
-      this.billService.getBills(query).then((bills) => {
+      this.billDataBase.readObjects(query).then((bills) => {
         console.log('bills');
         console.log(JSON.stringify(bills));
         if(bills != undefined && bills != null){
@@ -84,7 +84,7 @@ export class EditBillPage {
 
   async onUpsertButtonClick(bill: Bill) {
 
-    await this.billService.updateBill(bill);
+    await this.billDataBase.updateObjects(bill);
 
     this.navCtrl.navigateForward(['/list-bill']);
 

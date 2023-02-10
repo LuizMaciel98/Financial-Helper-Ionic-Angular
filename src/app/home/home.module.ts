@@ -4,8 +4,8 @@ import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HomePage } from './home.page';
-import { BillService } from '../../dataBase/bill.dataBase';
-import { RevenueService } from '../../dataBase/revenue.dataBase';
+import { BillDataBase } from '../../dataBase/bill.dataBase';
+import { RevenueDataBase } from '../../dataBase/revenue.dataBase';
 import { SQLite } from '@ionic-native/sqlite/ngx';
 import { HttpClientModule } from '@angular/common/http';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
@@ -27,8 +27,8 @@ import { NgChartsModule } from 'ng2-charts';
     NgChartsModule
   ],
   providers: [
-    BillService,
-    RevenueService,
+    BillDataBase,
+    RevenueDataBase,
     SQLite,
     SQLitePorter,
     CurrencyPipe

@@ -49,10 +49,10 @@ export class BillDataBase implements DatabaseCRUD {
         if(!this.db) {
             await this.createDatabase();
         }
-        let dueDateString = bill.dueDate?.toString();
-        let dueDateFormatted = dueDateString?.split('/')[2] + '-' + dueDateString?.split('/')[1] + '-' + dueDateString?.split('/')[0];
-        const data = [bill.primaryKey, bill.name, dueDateFormatted, bill.price, bill.paid, bill.category, bill.paymentDate, bill.reminder, bill.notes, bill.billRecurrent];
-        console.log(JSON.stringify(dueDateFormatted));
+        // let dueDateString = bill.dueDate?.toString();
+        // let dueDateFormatted = dueDateString?.split('/')[2] + '-' + dueDateString?.split('/')[1] + '-' + dueDateString?.split('/')[0];
+        console.log(JSON.stringify(bill.dueDate));
+        const data = [bill.primaryKey, bill.name, bill.dueDate, bill.price, bill.paid, bill.category, bill.paymentDate, bill.reminder, bill.notes, bill.billRecurrent];
         if(this.db){
             try {
                 console.log('TRIED TO INSERT');

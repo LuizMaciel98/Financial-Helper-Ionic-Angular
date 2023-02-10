@@ -1,9 +1,9 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
-import { BillService } from '../../dataBase/bill.dataBase';
+import { BillDataBase } from '../../dataBase/bill.dataBase';
 import { Bill } from '../../models/bill.model';
-import { RevenueService } from '../../dataBase/revenue.dataBase';
+import { RevenueDataBase } from '../../dataBase/revenue.dataBase';
 import { Revenue } from '../../models/revenue.model';
 import { CurrencyPipe } from '@angular/common';
 import { Chart } from 'chart.js';
@@ -38,8 +38,8 @@ export class HomePage implements OnInit, AfterViewInit  {
   constructor(
     public modalCtrl: ModalController, 
     private router: Router, 
-    public billService: BillService, 
-    public revenueService: RevenueService, 
+    public billDataBase: BillDataBase, 
+    public revenueDataBase: RevenueDataBase, 
     private currencyPipe: CurrencyPipe,
     private actionSheetCtrl: ActionSheetController
     ) {
@@ -110,7 +110,7 @@ export class HomePage implements OnInit, AfterViewInit  {
       }
     };
     console.log(JSON.stringify(query));
-    this.billsChoosedMonth = await this.billService.getBills(query) as Bill[];
+    this.billsChoosedMonth = await this.billDataBase.readObjects(query) as Bill[];
 
     console.log(this.billsChoosedMonth);
 
@@ -135,7 +135,7 @@ export class HomePage implements OnInit, AfterViewInit  {
         year: year
       }
     };
-    this.revenuesChoosedMonth = await this.revenueService.getRevenues(query) as Revenue[];
+    this.revenuesChoosedMonth = await this.revenueDataBase.readObjects(query) as Revenue[];
   
     this.choosedMonthRevenues = 0;
     if(this.revenuesChoosedMonth != undefined && this.revenuesChoosedMonth.length > 0) {
@@ -221,17 +221,18 @@ export class HomePage implements OnInit, AfterViewInit  {
     let result = [
       // datasets: [
         {
-          data: [this.choosedMonthRevenues], 
-          label: 'Receitas',
-          backgroundColor: ['rgba(121, 255, 70, 0.9)'],
+          data: [this.choosedMonthRevenues, this.choosedMonthExpenses], 
+          label: this.choosedMonth,
+          backgroundColor: ['rgba(121, 255, 70, 0.9)', 'rgba(255, 95, 86, 0.9)'],
+          // backgroundColor: ['rgba(255, 95, 86, 0.9)'],
           // borderWidth: 1
         },
-        {
-          data: [this.choosedMonthExpenses], 
-          label: 'Despesas',
-          backgroundColor: ['rgba(255, 95, 86, 0.9)'],
-          // borderWidth: 1
-        },
+        // {
+        //   data: [this.choosedMonthExpenses], 
+        //   label: 'Despesas',
+        //   backgroundColor: ['rgba(255, 95, 86, 0.9)'],
+        //   // borderWidth: 1
+        // },
       // ]
     ];
 

@@ -7,8 +7,7 @@
   
     <ion-item>
       <ion-label position="floating">Data de vencimento</ion-label>
-      <!-- <ion-datetime formControlName="dueDate" id="datetime"></ion-datetime> -->
-      <ion-input [(ngModel)]="bill.dueDate" formControlName="dueDate" type="text" mask="**/**/****" maxlength="10" ></ion-input>
+      <ion-input [(ngModel)]="bill.dueDate" formControlName="dueDate" type="Date"></ion-input>
     </ion-item>
   
     <ion-item>
@@ -28,8 +27,7 @@
     
     <ion-item>
       <ion-label position="floating">Data de pagamento</ion-label>
-      <!-- <ion-datetime formControlName="paymentDate"></ion-datetime> -->
-      <ion-input [(ngModel)]="bill.paymentDate" formControlName="paymentDate" type="text" mask="**/**/****" maxlength="10" ></ion-input>
+      <ion-input [(ngModel)]="bill.paymentDate" formControlName="paymentDate" type="Date"></ion-input>
     </ion-item>
   
     <ion-item>

@@ -9,6 +9,8 @@ export class Bill {
     reminder: boolean;
     notes: string;
     billRecurrent: string | null;
+    frequency: string | null;
+    isRecurrent: boolean;
 
     public constructor() {
         this.primaryKey = '';
@@ -21,5 +23,8 @@ export class Bill {
         this.reminder = false;
         this.notes = '';
         this.billRecurrent = null;
+        this.frequency = '';
+        this.isRecurrent = false;
     }
+
 }

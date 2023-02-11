@@ -8,7 +8,7 @@ export class BillRecurrentDataBase implements DatabaseCRUD {
     private db: SQLiteObject | null = null;
 
     constructor(private sqlite: SQLite) {
-        if(this.db == null){
+        if (this.db == null){
             this.createDatabase();
         }
     }
@@ -73,12 +73,12 @@ export class BillRecurrentDataBase implements DatabaseCRUD {
                 console.log('sql: ' + sql);
                 console.log('query: ' + query);
                 console.log(JSON.stringify(query));
-                if(query == 'All'){ 
+                if (query == 'All'){ 
                     result = await this.db.executeSql(sql, []);
                 } else {
                     sql = sql + ' WHERE ';
                     Object.keys(query).forEach((key, index) => {
-                        if(key === "frequency") {
+                        if (key === "frequency") {
                             sql += ` frequency = ?`;
                             values.push(query[key]);
                         } else {

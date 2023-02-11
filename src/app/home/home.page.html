@@ -27,6 +27,52 @@
     </ion-header>
     <ion-content>
 
+      <ion-card *ngIf="hasPastDueDate === true">
+        
+        <ion-card-header>
+          <ion-card-title>
+            Contas vencidas
+          </ion-card-title>
+          <br/>
+          <ion-grid> <!-- *ngIf="showTableItems" -->
+            <ion-row>
+              <ion-col>Nome</ion-col>
+              <!-- <ion-col>Due Date</ion-col> -->
+              <ion-col>Preço</ion-col>
+              <ion-col>Data de Vencimento</ion-col>
+              <!-- <ion-col>Category</ion-col> -->
+              <!-- <ion-col>Payment Date</ion-col> -->
+              <!-- <ion-col >Reminder</ion-col> -->
+              <!-- <ion-col>Notes</ion-col> -->
+            </ion-row>
+            <ion-row> <!-- *ngFor="let bill of bills" -->
+              <ion-col>Teste Conta 1</ion-col>
+              <!-- <ion-col>{{ bill.dueDate }}</ion-col> -->
+              <ion-col>R$ 500</ion-col>
+              <ion-col>07/02/2023</ion-col>
+              <!-- <ion-col>{{ bill.category }}</ion-col> -->
+              <!-- <ion-col>{{ bill.paymentDate }}</ion-col> -->
+              <!-- <ion-col>{{ bill.reminder }}</ion-col> -->
+              <!-- <ion-col>{{ bill.notes }}</ion-col> -->
+            </ion-row>
+          </ion-grid>
+        </ion-card-header>
+
+        <!-- <ion-card-content>
+          Contas vencidas
+        </ion-card-content> -->
+      </ion-card>
+
+      <ion-card *ngIf="hasCloseDueDate === true">
+        <ion-card-header>
+          <ion-card-title>Contas a vencer</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content>
+          Contas a vencer nos próximos 7 dias
+        </ion-card-content>
+      </ion-card>
+
       <ion-card>
         <ion-card-header>
           <ion-card-title>Visão Geral</ion-card-title>

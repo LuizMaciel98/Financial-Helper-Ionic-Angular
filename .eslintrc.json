@@ -13,6 +13,22 @@
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
+        "keyword-spacing": ["warn", {
+          "before": true,
+          "after": true
+        }],
+        "no-unreachable": ["error"],
+        "no-irregular-whitespace": ["error"],
+        "no-unused-expressions": ["error"],
+        "indent": [
+          "warn", 
+          4,
+          { "ignoredNodes": ["CallExpression > FunctionExpression.callee > BlockStatement.body"] }
+        ],
+        "no-console": [
+          "warn", 
+          {"allow": [""]}
+        ],
         "@angular-eslint/component-class-suffix": [
           "error",
           {

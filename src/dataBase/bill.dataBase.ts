@@ -8,7 +8,7 @@ export class BillDataBase implements DatabaseCRUD {
     private db: SQLiteObject | null = null;
 
     constructor(private sqlite: SQLite) {
-        if(this.db == null){
+        if (this.db == null){
             this.createDatabase();
         }
     }
@@ -46,14 +46,14 @@ export class BillDataBase implements DatabaseCRUD {
     }
 
     async createObject(bill: Bill | any) {
-        if(!this.db) {
+        if (!this.db) {
             await this.createDatabase();
         }
         // let dueDateString = bill.dueDate?.toString();
         // let dueDateFormatted = dueDateString?.split('/')[2] + '-' + dueDateString?.split('/')[1] + '-' + dueDateString?.split('/')[0];
         console.log(JSON.stringify(bill.dueDate));
         const data = [bill.primaryKey, bill.name, bill.dueDate, bill.price, bill.paid, bill.category, bill.paymentDate, bill.reminder, bill.notes, bill.billRecurrent];
-        if(this.db){
+        if (this.db){ 
             try {
                 console.log('TRIED TO INSERT');
                 return this.db.executeSql('INSERT INTO bills (primaryKey, name, dueDate, price, paid, category, paymentDate, reminder, notes, billRecurrent) VALUES (?,?,?,?,?,?,?,?,?,?)', data)
@@ -82,12 +82,12 @@ export class BillDataBase implements DatabaseCRUD {
                 console.log('sql: ' + sql);
                 console.log('query: ' + query);
                 console.log(JSON.stringify(query));
-                if(query == 'All'){ 
+                if (query == 'All'){ 
                     result = await this.db.executeSql(sql, []);
                 } else {
                     sql = sql + ' WHERE ';
                     Object.keys(query).forEach((key, index) => {
-                        if(key === "dueDate") {
+                        if (key === "dueDate") {
                             sql += ` strftime('%m', ${key}) = ? AND strftime('%Y', ${key}) = ?`;
                             values.push(query[key].month);
                             values.push(query[key].year);

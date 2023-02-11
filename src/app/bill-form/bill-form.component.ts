@@ -4,9 +4,9 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-bill-form',
-  templateUrl: './bill-form.component.html',
-  styleUrls: ['./bill-form.component.scss'],
+    selector: 'app-bill-form',
+    templateUrl: './bill-form.component.html',
+    styleUrls: ['./bill-form.component.scss'],
 })
 export class BillFormComponent implements OnInit {
 
@@ -20,6 +20,7 @@ export class BillFormComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private router: Router) {
     this.bill = new Bill();
 
+    
     this.billForm = this.formBuilder.group({
       name: new FormControl(''),
       dueDate: new FormControl(''),
@@ -28,7 +29,9 @@ export class BillFormComponent implements OnInit {
       category: new FormControl(''),
       paymentDate: new FormControl(''),
       reminder: new FormControl(false),
-      notes: new FormControl('')
+      notes: new FormControl(''),
+      isRecurrent: new FormControl(''),
+      frequency: new FormControl('')
     });
   }
   
@@ -37,7 +40,7 @@ export class BillFormComponent implements OnInit {
     this.bill.name = '';
     // this.bill.dueDate = new Date();
     this.bill.price = null;
-    this.bill.paid = false;
+    this.bill.paid = false; 
     this.bill.category = '';
     // this.bill.paymentDate = new Date();
     this.bill.reminder = false;

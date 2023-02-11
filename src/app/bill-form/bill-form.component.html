@@ -30,14 +30,29 @@
       <ion-input [(ngModel)]="bill.paymentDate" formControlName="paymentDate" type="Date"></ion-input>
     </ion-item>
   
-    <ion-item>
+    <!-- <ion-item>
       <ion-label position="floating">Lembrete</ion-label>
       <ion-checkbox [(ngModel)]="bill.reminder" formControlName="reminder"></ion-checkbox>
-    </ion-item>
+    </ion-item> -->
   
     <ion-item>
       <ion-label position="floating">Anotações</ion-label>
       <ion-textarea [(ngModel)]="bill.notes" formControlName="notes"></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">É recorrente?</ion-label>
+      <ion-checkbox [(ngModel)]="bill.isRecurrent" formControlName="isRecurrent"></ion-checkbox>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Frequência:</ion-label>
+      <ion-select [(ngModel)]="bill.frequency" formControlName="frequency">
+        <ion-select-option value="daily">Diáriamente</ion-select-option>
+        <ion-select-option value="weekly">Semanalmente</ion-select-option>
+        <ion-select-option value="monthly">Mensalmente</ion-select-option>
+        <ion-select-option value="annually">Anualmente</ion-select-option>
+      </ion-select>
     </ion-item>
 
     <div class="ion-text-center">

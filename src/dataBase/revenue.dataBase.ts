@@ -8,7 +8,7 @@ export class RevenueDataBase implements DatabaseCRUD {
     private db: SQLiteObject | null = null;
 
     constructor(private sqlite: SQLite) {
-        if(this.db == null){
+        if (this.db == null){
             this.createDatabase();
         }
     }
@@ -41,11 +41,11 @@ export class RevenueDataBase implements DatabaseCRUD {
 
     // Create
     async createObject(revenue: Revenue | any) {
-        if(!this.db) {
+        if (!this.db) {
             await this.createDatabase();
         }
         const data = [revenue.type, revenue.amount, revenue.date];
-        if(this.db){
+        if (this.db){
             try {
                 console.log('TRIED TO INSERT');
                 return this.db.executeSql('INSERT INTO revenues (type, amount, date) VALUES (?,?,?)', data)

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { Bill } from '../../models/bill.model';
 import { Router } from '@angular/router';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Validators, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, RequiredValidator } from '@angular/forms';
 
 @Component({
     selector: 'app-bill-form',
@@ -22,9 +22,9 @@ export class BillFormComponent implements OnInit {
 
     
     this.billForm = this.formBuilder.group({
-      name: new FormControl(''),
-      dueDate: new FormControl(''),
-      price: new FormControl(''),
+      name: new FormControl('', Validators.required),
+      dueDate: new FormControl('', Validators.required),
+      price: new FormControl('', Validators.required),
       paid: new FormControl(false),
       category: new FormControl(''),
       paymentDate: new FormControl(''),

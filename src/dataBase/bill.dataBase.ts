@@ -46,17 +46,27 @@ export class BillDataBase implements DatabaseCRUD {
     }
 
     async createObject(bill: Bill | any) {
+        console.log('createObject');
         if (!this.db) {
             await this.createDatabase();
         }
-        // let dueDateString = bill.dueDate?.toString();
+        let billDueDate = new Date(bill.dueDate);
+        console.log('billDueDate: ' + JSON.stringify(billDueDate));
+
+        let billDateMonth: string;
+        billDateMonth = (billDueDate.getMonth() + 1).toString();
+        if (billDateMonth.length == 1)
+            billDateMonth = '0' + billDateMonth;
+
+        let dueDateString = billDueDate.getFullYear() + '-' + billDateMonth + '-' + billDueDate.getDate();
+        console.log('dueDateString: ' + JSON.stringify(dueDateString));
         // let dueDateFormatted = dueDateString?.split('/')[2] + '-' + dueDateString?.split('/')[1] + '-' + dueDateString?.split('/')[0];
-        console.log(JSON.stringify(bill.dueDate));
-        const data = [bill.primaryKey, bill.name, bill.dueDate, bill.price, bill.paid, bill.category, bill.paymentDate, bill.reminder, bill.notes, bill.billRecurrent];
-        if (this.db){ 
+        const data = await [bill.name, dueDateString, bill.price, bill.paid, bill.category, bill.paymentDate, bill.reminder, bill.notes, bill.billRecurrent];
+        console.log(JSON.stringify(data));
+        if (this.db) {
             try {
                 console.log('TRIED TO INSERT');
-                return this.db.executeSql('INSERT INTO bills (primaryKey, name, dueDate, price, paid, category, paymentDate, reminder, notes, billRecurrent) VALUES (?,?,?,?,?,?,?,?,?,?)', data)
+                return await this.db.executeSql('INSERT INTO bills (name, dueDate, price, paid, category, paymentDate, reminder, notes, billRecurrent) VALUES (?,?,?,?,?,?,?,?,?)', data);
             } catch (error) {
                 console.error(error);
             }

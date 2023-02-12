@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { Revenue } from '../../models/revenue.model';
 import { Router } from '@angular/router';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Validators, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-revenue-form',
@@ -21,10 +21,10 @@ export class RevenueFormComponent implements OnInit {
     this.revenue = new Revenue('', '', '', null, '');
 
     this.revenueForm = this.formBuilder.group({
-      name: new FormControl(''),
-      type: new FormControl(''),
-      amount: new FormControl(''),
-      date: new FormControl('')
+      name: new FormControl('', Validators.required),
+      type: new FormControl('', Validators.required),
+      amount: new FormControl('', Validators.required),
+      date: new FormControl('', Validators.required)
     });
   }
 

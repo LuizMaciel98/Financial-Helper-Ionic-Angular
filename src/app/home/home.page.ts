@@ -96,7 +96,7 @@ export class HomePage implements OnInit, AfterViewInit  {
     this.formattedChoosedMonthBalance = await this.currencyPipe.transform(this.choosedMonthBalance, 'BRL', true);
 
     await this.barChartMethod();
-    this.barChart.chart.update();
+    this.barChart.update();
   }
 
   async calculateChoosedMonthExpenses() {

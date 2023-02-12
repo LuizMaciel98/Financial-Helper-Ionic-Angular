@@ -39,7 +39,7 @@ export class InsertBillPage {
 
   async onUpsertButtonClick(bill: Bill) {
 
-      this.billService.createBill(bill, );
+      await this.billService.createBill(bill);
 
       // await this.billDataBase.createObject(bill);
 

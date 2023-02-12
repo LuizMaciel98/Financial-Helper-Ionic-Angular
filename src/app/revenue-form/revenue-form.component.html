@@ -1,5 +1,5 @@
 <ion-content>
-  <form [formGroup]="revenueForm">
+  <form [formGroup]="revenueForm" (submit)="onUpsertButtonClick()">
     <ion-item>
       <ion-label>Nome:</ion-label>
       <ion-input [(ngModel)]="revenue.name" formControlName="name"></ion-input>
@@ -24,8 +24,8 @@
     </ion-item>
 
     <div class="ion-text-center">
-      <ion-button *ngIf="isInsert === true" (click)="onUpsertButtonClick()">Salvar receita</ion-button>
-      <ion-button *ngIf="isInsert === false" (click)="onUpsertButtonClick()">Atualizar receita</ion-button>
+      <ion-button *ngIf="isInsert === true" [disabled]="!revenueForm.valid" type="submit">Salvar receita</ion-button>
+      <ion-button *ngIf="isInsert === false" [disabled]="!revenueForm.valid" type="submit">Atualizar receita</ion-button>
     </div>
   </form>
 </ion-content>

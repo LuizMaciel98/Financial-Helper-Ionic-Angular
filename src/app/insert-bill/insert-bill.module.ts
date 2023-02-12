@@ -11,6 +11,8 @@ import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { BillDataBase } from '../../dataBase/bill.dataBase';
 // import { BillFormComponent } from '../bill-form/bill-form.component';
 import { SharedModule } from '../shared/shared.module';
+import { BillService } from 'src/services/bill.service';
+import { BillRecurrentDataBase } from 'src/dataBase/billRecurrent.dataBase';
 
 @NgModule({
   imports: [
@@ -23,6 +25,8 @@ import { SharedModule } from '../shared/shared.module';
   providers: [
     SQLite, 
     SQLitePorter, 
+    BillService,
+    BillRecurrentDataBase,
     BillDataBase
   ],
   declarations: [

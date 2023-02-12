@@ -40,12 +40,12 @@ export class BillRecurrentDataBase implements DatabaseCRUD {
         if (!this.db) {
             await this.createDatabase();
         }
-        const data = [billRecurrent.primaryKey, billRecurrent.frequency];
+        const data = [billRecurrent.frequency];
         if (this.db) {
             try {
                 console.log('TRIED TO INSERT');
                 return this.db.executeSql(
-                    'INSERT INTO billsRecurrent (primaryKey, frequency) VALUES (?,?)',
+                    'INSERT INTO billsRecurrent (frequency) VALUES (?)',
                     data
                 );
             } catch (error) {

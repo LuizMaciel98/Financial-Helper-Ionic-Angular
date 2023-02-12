@@ -34,14 +34,14 @@ export class ListBillPage implements OnInit {
   }
 
   changeListView(event: any){
-    let value = event.detail.value;
-    if(value == 'List'){
-      this.showListItems = true;
-      this.showTableItems = false;
-    } else {
-      this.showListItems = false;
-      this.showTableItems = true;
-    }
+      let value = event.detail.value;
+      if (value == 'List'){
+          this.showListItems = true;
+          this.showTableItems = false;
+      } else {
+          this.showListItems = false;
+          this.showTableItems = true;
+      }
   }
 
   editBill(primaryKey: any) {

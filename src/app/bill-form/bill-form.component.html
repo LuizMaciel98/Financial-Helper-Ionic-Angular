@@ -1,5 +1,5 @@
 <ion-content>
-  <form [formGroup]="billForm">
+  <form [formGroup]="billForm" (submit)="onUpsertButtonClick()">
     <ion-item>
       <ion-label position="floating">Nome</ion-label>
       <ion-input [(ngModel)]="bill.name" formControlName="name"></ion-input>
@@ -45,7 +45,7 @@
       <ion-checkbox [(ngModel)]="bill.isRecurrent" formControlName="isRecurrent"></ion-checkbox>
     </ion-item>
 
-    <ion-item>
+    <ion-item *ngIf="bill.isRecurrent === true">
       <ion-label position="floating">Frequência:</ion-label>
       <ion-select [(ngModel)]="bill.frequency" formControlName="frequency">
         <ion-select-option value="daily">Diáriamente</ion-select-option>
@@ -57,8 +57,8 @@
 
     <div class="ion-text-center">
 
-      <ion-button *ngIf="isInsert === true" (click)="onUpsertButtonClick()">Salvar a conta</ion-button>
-      <ion-button *ngIf="isInsert === false" (click)="onUpsertButtonClick()">Atualizar a conta</ion-button>
+      <ion-button *ngIf="isInsert === true" [disabled]="!billForm.valid" type="submit">Salvar a conta</ion-button>
+      <ion-button *ngIf="isInsert === false" [disabled]="!billForm.valid" type="submit">Atualizar a conta</ion-button>
 
     </div>
   </form>

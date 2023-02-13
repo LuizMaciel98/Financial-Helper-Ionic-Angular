@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { Revenue } from '../../models/revenue.model';
+import { Revenue } from '../../../models/revenue.model';
 import { Router } from '@angular/router';
 import { Validators, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 

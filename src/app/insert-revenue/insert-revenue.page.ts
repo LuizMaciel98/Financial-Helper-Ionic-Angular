@@ -7,7 +7,7 @@ import { RevenueDataBase } from '../../dataBase/revenue.dataBase';
 import { tap } from 'rxjs/operators';
 import { Params } from '@angular/router';
 import { ToastController } from '@ionic/angular';
-import { RevenueFormComponent } from '../revenue-form/revenue-form.component';
+import { RevenueFormComponent } from '../components/revenue-form/revenue-form.component';
 
 @Component({
   selector: 'app-insert-revenue',

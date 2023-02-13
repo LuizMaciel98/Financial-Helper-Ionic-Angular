@@ -7,7 +7,7 @@ import { BillService } from '../../services/bill.service';
 import { tap } from 'rxjs/operators';
 import { Params } from '@angular/router';
 import { ToastController } from '@ionic/angular';
-import { BillFormComponent } from '../bill-form/bill-form.component';
+import { BillFormComponent } from '../components/bill-form/bill-form.component';
 
 @Component({
     selector: 'app-insert-bill',

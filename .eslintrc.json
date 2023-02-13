@@ -25,10 +25,10 @@
         //   4,
         //   { "ignoredNodes": ["CallExpression > FunctionExpression.callee > BlockStatement.body"] }
         // ],
-        // "no-console": [
-        //   "warn", 
-        //   {"allow": [""]}
-        // ],
+        "no-console": [
+          "warn", 
+          {"allow": [""]}
+        ],
         "@angular-eslint/component-class-suffix": [
           "error",
           {

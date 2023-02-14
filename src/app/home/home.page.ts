@@ -1,21 +1,25 @@
-import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 import { BillDataBase } from '../../dataBase/bill.dataBase';
 import { Bill } from '../../models/bill.model';
 import { RevenueDataBase } from '../../dataBase/revenue.dataBase';
+import { LocalNotificationService } from '../../services/localNotification.service';
 import { Revenue } from '../../models/revenue.model';
 import { CurrencyPipe } from '@angular/common';
 import { Chart } from 'chart.js';
 import { Router } from '@angular/router';
 import { ActionSheetController } from '@ionic/angular';
+import { BillService } from 'src/services/bill.service';
+// import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage implements OnInit, AfterViewInit  {
+export class HomePage implements OnInit, AfterViewInit, OnDestroy  {
+  choosedYear: string;
   choosedMonth: string;
   choosedDate: Date;
   choosedMonthExpenses: number;
@@ -32,22 +36,30 @@ export class HomePage implements OnInit, AfterViewInit  {
   billsChoosedMonth: Bill[];
   revenuesChoosedMonth: Revenue[];
 
-  hasPastDueDate: boolean = true;
-  hasCloseDueDate: boolean = true;
+  hasOverdueBills: boolean = false;
+  hasCloseDueDate: boolean = false;
+
+  overdueBills: Bill[] = [];
 
   constructor(
-    public modalCtrl: ModalController, 
-    private router: Router, 
-    public billDataBase: BillDataBase, 
-    public revenueDataBase: RevenueDataBase, 
+    public modalCtrl: ModalController,
+    private router: Router,
+    public billDataBase: BillDataBase,
+    public billService: BillService,
+    public revenueDataBase: RevenueDataBase,
     private currencyPipe: CurrencyPipe,
-    private actionSheetCtrl: ActionSheetController
+    private actionSheetCtrl: ActionSheetController,
+    private localNotificationService: LocalNotificationService,
+    // private localNotifications: LocalNotifications
     ) {
+
+    // localNotificationService.simpleNotif();
 
     let date = new Date();
 
     this.choosedDate = new Date(date.getFullYear(), date.getMonth(), 1);
     this.choosedMonth = this.choosedDate.toLocaleString('default', { month: 'long' });
+    this.choosedYear = this.choosedDate.getFullYear().toString();
 
     this.billsChoosedMonth = [];
     this.revenuesChoosedMonth = [];
@@ -57,11 +69,12 @@ export class HomePage implements OnInit, AfterViewInit  {
     this.choosedMonthBalance = 0;
     
     this.calculateChoosedMonth();
+    this.calculateCloseAndOverdueBills();
   }
 
   async ngOnInit() {
-    this.calculateInitialChoosedMonth();
-    this.calculateChoosedMonth();
+    await this.calculateInitialChoosedMonth();
+    await this.calculateChoosedMonth();
   }
 
   ionViewWillEnter() {
@@ -69,9 +82,27 @@ export class HomePage implements OnInit, AfterViewInit  {
     this.calculateChoosedMonth();
   }
 
+  ngOnDestroy() {
+    // Likewise, this will may not consistently fire when you navigate away
+    // from the component
+    console.log("LoginPage - OnDestroy")
+  }
+
+  async calculateCloseAndOverdueBills() {
+    console.log('calculateCloseAndOverdueBills');
+    this.overdueBills = await this.billService.getOverdueBill();
+
+    if (this.overdueBills.length > 0){
+      this.hasOverdueBills = true;
+    }
+    console.log('this.overdueBills' + JSON.stringify(this.overdueBills));
+  }
+
   calculateInitialChoosedMonth() {
-    if(this.choosedDate != undefined)
+    if (this.choosedDate != undefined) {
       this.choosedMonth = this.choosedDate.toLocaleString('default', { month: 'long' });
+      this.choosedYear = this.choosedDate.getFullYear().toString();
+    }
 
     return this.choosedMonth;
   }
@@ -138,9 +169,9 @@ export class HomePage implements OnInit, AfterViewInit  {
     this.revenuesChoosedMonth = await this.revenueDataBase.readObjects(query) as Revenue[];
   
     this.choosedMonthRevenues = 0;
-    if(this.revenuesChoosedMonth != undefined && this.revenuesChoosedMonth.length > 0) {
+    if (this.revenuesChoosedMonth != undefined && this.revenuesChoosedMonth.length > 0) {
       this.revenuesChoosedMonth.forEach(revenue => {
-        if(revenue.amount != undefined && revenue.amount != null)
+        if (revenue.amount != undefined && revenue.amount != null)
           this.choosedMonthRevenues = this.choosedMonthRevenues + revenue.amount;
       });
     }
@@ -150,24 +181,28 @@ export class HomePage implements OnInit, AfterViewInit  {
   
 
   navigateToListBill() {
-    this.router.navigate(['/list-bill']);
+    this.router.navigate(['/list-bill'], { replaceUrl: true });
   }
   
   navigateToInsertBill() {
-    this.router.navigate(['/insert-bill']);
+    this.router.navigate(['/insert-bill'], { replaceUrl: true });
   }
   
   navigateToInsertRevenue(){
-    this.router.navigate(['/insert-revenue']);
+    this.router.navigate(['/insert-revenue'], { replaceUrl: true });
   }
   
   navigateToListRevenue(){
-    this.router.navigate(['/list-revenue']);
+    this.router.navigate(['/list-revenue'], { replaceUrl: true });
   }
 
   navigateToNextMonth() {
+    console.log(JSON.stringify('navigateToNextMonth'));
+
     this.choosedDate.setMonth(this.choosedDate.getMonth() + 1);
     this.choosedMonth = this.choosedDate.toLocaleString('default', { month: 'long' });
+    this.choosedYear = this.choosedDate.getFullYear().toString();
+    console.log(JSON.stringify(this.choosedYear));
 
     this.calculateChoosedMonth();
   }
@@ -175,13 +210,14 @@ export class HomePage implements OnInit, AfterViewInit  {
   navigateToPreviousMonth() {
     this.choosedDate.setMonth(this.choosedDate.getMonth() - 1);
     this.choosedMonth = this.choosedDate.toLocaleString('default', { month: 'long' });
+    this.choosedYear = this.choosedDate.getFullYear().toString();
 
     this.calculateChoosedMonth();
   }
 
-  ngAfterViewInit() {
-    // this.barChartMethod();
-    // this.barChart.chart.update();
+  ngAfterViewInit () {
+    this.barChartMethod();
+    this.barChart.update();
   }
 
   barChartMethod() {

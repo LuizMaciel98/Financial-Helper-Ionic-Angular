@@ -1,21 +1,5 @@
 <ion-app>
-  <ion-menu contentId="main-content">
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Menu</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="ion-padding">
-      <div class="ion-text-center">
-        <ion-button (click)="navigateToInsertBill()">Inserir uma conta</ion-button>
-        <ion-button (click)="navigateToListBill()">Lista de contas</ion-button>
-      </div>
-      <div class="ion-text-center">
-        <ion-button (click)="navigateToInsertRevenue()">Inserir uma receita</ion-button>
-        <ion-button (click)="navigateToListRevenue()">Lista de receitas</ion-button>
-      </div>
-    </ion-content>
-  </ion-menu>
+  <app-global-header></app-global-header>
   <div class="ion-page" id="main-content">
     <ion-header>
       <ion-toolbar>
@@ -23,55 +7,51 @@
           <ion-menu-button></ion-menu-button>
         </ion-buttons>
         <ion-title>Finanças Inteligentes</ion-title>
-      </ion-toolbar>
+      </ion-toolbar> 
     </ion-header>
     <ion-content>
 
-      <ion-card *ngIf="hasPastDueDate === true">
-        
-        <ion-card-header>
-          <ion-card-title>
-            Contas vencidas
-          </ion-card-title>
-          <br/>
-          <ion-grid> <!-- *ngIf="showTableItems" -->
-            <ion-row>
-              <ion-col>Nome</ion-col>
-              <!-- <ion-col>Due Date</ion-col> -->
-              <ion-col>Preço</ion-col>
-              <ion-col>Data de Vencimento</ion-col>
-              <!-- <ion-col>Category</ion-col> -->
-              <!-- <ion-col>Payment Date</ion-col> -->
-              <!-- <ion-col >Reminder</ion-col> -->
-              <!-- <ion-col>Notes</ion-col> -->
-            </ion-row>
-            <ion-row> <!-- *ngFor="let bill of bills" -->
-              <ion-col>Teste Conta 1</ion-col>
-              <!-- <ion-col>{{ bill.dueDate }}</ion-col> -->
-              <ion-col>R$ 500</ion-col>
-              <ion-col>07/02/2023</ion-col>
-              <!-- <ion-col>{{ bill.category }}</ion-col> -->
-              <!-- <ion-col>{{ bill.paymentDate }}</ion-col> -->
-              <!-- <ion-col>{{ bill.reminder }}</ion-col> -->
-              <!-- <ion-col>{{ bill.notes }}</ion-col> -->
-            </ion-row>
-          </ion-grid>
-        </ion-card-header>
+       
+      <!-- <ion-button id="open-custom-dialog" expand="block">Open Custom Dialog</ion-button> -->
+      
+      <ion-modal id="example-modal" #modal [isOpen]="hasOverdueBills" trigger="open-custom-dialog">
+        <ng-template>
+          <div class="wrapper"> 
+            <h1>Você possuí depesas vencidas!</h1>
 
-        <!-- <ion-card-content>
-          Contas vencidas
-        </ion-card-content> -->
-      </ion-card>
-
-      <ion-card *ngIf="hasCloseDueDate === true">
-        <ion-card-header>
-          <ion-card-title>Contas a vencer</ion-card-title>
-        </ion-card-header>
-
-        <ion-card-content>
-          Contas a vencer nos próximos 7 dias
-        </ion-card-content>
-      </ion-card>
+            <ion-card>
+              <ion-card-header>
+                <!-- <ion-card-title>
+                  
+                </ion-card-title> -->
+                <br/>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col>Nome</ion-col>
+                    <ion-col>Preço</ion-col>
+                    <ion-col>Data de Vencimento</ion-col>
+                  </ion-row>
+                  <ion-row *ngFor="let bill of overdueBills">
+                    <ion-col>{{bill.name}}</ion-col>
+                    <ion-col>R${{bill.price}}</ion-col>
+                    <ion-col>{{bill.dueDate}}</ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-card-header>
+            </ion-card>
+      
+            <!-- <ion-card *ngIf="hasCloseDueDate === true">
+              <ion-card-header>
+                <ion-card-title>Contas a vencer</ion-card-title>
+              </ion-card-header>
+      
+              <ion-card-content>
+                Contas a vencer nos próximos 7 dias
+              </ion-card-content>
+            </ion-card> -->
+          </div>
+        </ng-template>
+      </ion-modal>
 
       <ion-card>
         <ion-card-header>
@@ -81,15 +61,16 @@
         <ion-card-content class="ion-text-center">
           <ion-grid>
             <ion-row>
-              <ion-col>
+              <ion-col class="vertical-align-content">
                 <ion-button fill="clear" (click)="navigateToPreviousMonth()">
                   <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
                 </ion-button>
               </ion-col>
               <ion-col class="ion-padding-vertical">
+                <h2>{{choosedYear}}</h2>
                 <h2 class="ion-text-capitalize">{{choosedMonth}}</h2>
               </ion-col>
-              <ion-col>
+              <ion-col class="vertical-align-content">
                 <ion-button fill="clear" (click)="navigateToNextMonth()">
                   <ion-icon slot="icon-only" name="arrow-forward-outline"></ion-icon>
                 </ion-button>

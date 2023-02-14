@@ -23,10 +23,10 @@ export class RevenueDataBase implements DatabaseCRUD {
                 db.executeSql(`
                 CREATE TABLE IF NOT EXISTS revenues (
                     primaryKey INTEGER PRIMARY KEY AUTOINCREMENT,
-                    name TEXT,
+                    name TEXT NOT NULL,
                     type TEXT,
-                    amount REAL,
-                    date DATE
+                    amount REAL NOT NULL,
+                    date DATE CHECK (date >= '1000-01-01' AND date <= '9999-12-31' AND date LIKE '____-__-__' AND date NOT NULL)
                     )
                 `, []);
                 this.db = db;

@@ -8,7 +8,7 @@ export class BillDataBase implements DatabaseCRUD {
     private db: SQLiteObject | null = null;
 
     constructor(private sqlite: SQLite) {
-        if (this.db == null){
+        if (this.db == null) {
             this.createDatabase();
         }
     }
@@ -23,12 +23,12 @@ export class BillDataBase implements DatabaseCRUD {
                 db.executeSql(`
                 CREATE TABLE IF NOT EXISTS bills (
                     primaryKey INTEGER PRIMARY KEY AUTOINCREMENT,
-                    name TEXT,
-                    dueDate DATE CHECK (dueDate >= '1000-01-01' AND dueDate <= '9999-12-31'),
-                    price REAL,
+                    name TEXT NOT NULL,
+                    dueDate DATE CHECK (dueDate >= '1000-01-01' AND dueDate <= '9999-12-31' AND dueDate LIKE '____-__-__' AND dueDate NOT NULL),
+                    price REAL NOT NULL,
                     paid BOOLEAN,
                     category TEXT,
-                    paymentDate DATE CHECK (dueDate >= '1000-01-01' AND dueDate <= '9999-12-31'),
+                    paymentDate DATE CHECK (paymentDate >= '1000-01-01' AND paymentDate <= '9999-12-31' AND paymentDate LIKE '____-__-__'),
                     reminder BOOLEAN,
                     notes TEXT,
                     billRecurrent INTEGER,
@@ -36,9 +36,8 @@ export class BillDataBase implements DatabaseCRUD {
                     )
                 `, []);
                 this.db = db;
-                console.log('db inside createDatabase');
-                console.log(JSON.stringify(this.db));
             }).catch(error => {
+                console.error('EXCEPTION');
                 console.error(error);
                 console.error(JSON.stringify(error));
             });
@@ -46,12 +45,10 @@ export class BillDataBase implements DatabaseCRUD {
     }
 
     async createObject(bill: Bill | any) {
-        console.log('createObject');
         if (!this.db) {
             await this.createDatabase();
         }
         let billDueDate = new Date(bill.dueDate);
-        console.log('billDueDate: ' + JSON.stringify(billDueDate));
 
         let billDateMonth: string;
         billDateMonth = (billDueDate.getMonth() + 1).toString();
@@ -59,13 +56,10 @@ export class BillDataBase implements DatabaseCRUD {
             billDateMonth = '0' + billDateMonth;
 
         let dueDateString = billDueDate.getFullYear() + '-' + billDateMonth + '-' + billDueDate.getDate();
-        console.log('dueDateString: ' + JSON.stringify(dueDateString));
-        // let dueDateFormatted = dueDateString?.split('/')[2] + '-' + dueDateString?.split('/')[1] + '-' + dueDateString?.split('/')[0];
+
         const data = await [bill.name, dueDateString, bill.price, bill.paid, bill.category, bill.paymentDate, bill.reminder, bill.notes, bill.billRecurrent];
-        console.log(JSON.stringify(data));
         if (this.db) {
             try {
-                console.log('TRIED TO INSERT');
                 return await this.db.executeSql('INSERT INTO bills (name, dueDate, price, paid, category, paymentDate, reminder, notes, billRecurrent) VALUES (?,?,?,?,?,?,?,?,?)', data);
             } catch (error) {
                 console.error(error);
@@ -74,24 +68,16 @@ export class BillDataBase implements DatabaseCRUD {
     }
 
     async readObjects(query: any): Promise<Bill[] | null> {
-        console.log('getBills');
-        console.log('this.db');
-        console.log(JSON.stringify(this.db));
         if (!this.db) {
             await this.createDatabase();
             console.log('1 after await createDatabase');
         }
-        console.log('2 after await createDatabase');
-        console.log(JSON.stringify(this.db));
         const bills: Bill[] = [];
         if (this.db) {
             try {
                 let sql = 'SELECT * FROM bills';
                 let values: any[] = [];
                 let result: any = null;
-                console.log('sql: ' + sql);
-                console.log('query: ' + query);
-                console.log(JSON.stringify(query));
                 if (query == 'All'){ 
                     result = await this.db.executeSql(sql, []);
                 } else {
@@ -109,15 +95,11 @@ export class BillDataBase implements DatabaseCRUD {
                             sql += ' AND';
                         }
                     });
-                    console.log('sql: ' + sql);
-                    console.log('values: ' + JSON.stringify(values));
                     result = await this.db.executeSql(sql, values);
                 }
-                console.log('result: ' + JSON.stringify(result));
                 for (let i = 0; i < result.rows.length; i++) {
                     bills.push(result.rows.item(i));
                 }
-                console.log('bills returned : ' + JSON.stringify(bills));
                 return bills;
             } catch (error) {
                 console.error(error);
@@ -151,5 +133,32 @@ export class BillDataBase implements DatabaseCRUD {
                 console.error(error);
             }
         }
+    }
+
+    async executeQuery(query:string) {
+        let bills:any = [];
+        
+        console.log('executeQuery');
+        console.log(JSON.stringify(query));
+        if (!this.db) {
+            await this.createDatabase();
+        }
+        if (this.db) {
+            try {
+                console.log(JSON.stringify(this.db));
+                console.log('executeQuery 2');
+                let result = await this.db.executeSql(query, []);
+                for (let i = 0; i < result.rows.length; i++) {
+                    bills.push(result.rows.item(i));
+                }
+            } catch (error) {
+                console.log('executeQuery error');
+                console.log(error);
+                console.log(JSON.stringify(error));
+            }
+        }
+
+        console.log(JSON.stringify(bills));
+        return bills;
     }
 }

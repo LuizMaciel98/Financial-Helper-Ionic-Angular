@@ -17,9 +17,21 @@ import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, IonicInputMaskModule, HttpClientModule],
-  providers: [SQLite, SQLitePorter, 
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
-  bootstrap: [AppComponent],
+  imports: [
+    BrowserModule, 
+    IonicModule.forRoot(), 
+    AppRoutingModule, 
+    IonicInputMaskModule, 
+    HttpClientModule
+  ],
+  providers: [
+    SQLite, 
+    SQLitePorter, 
+    // LocalNotifications,
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+  ],
+  bootstrap: [
+    AppComponent
+  ],
 })
 export class AppModule {}

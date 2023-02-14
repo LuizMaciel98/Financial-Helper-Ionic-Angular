@@ -1,11 +1,16 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>
-      Criar conta
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-app>
+  <app-global-header></app-global-header>
+ 
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Criar Despesa</ion-title>
+    </ion-toolbar>
+  </ion-header>
 
-<ion-content>
-  <app-bill-form (upsertBillEvent)="onUpsertButtonClick($event)" [bill]="bill" [isInsert]="true"></app-bill-form>
-</ion-content>
+  <ion-content>
+    <app-bill-form (upsertBillEvent)="onUpsertButtonClick($event)" [bill]="bill" [isInsert]="true"></app-bill-form>
+  </ion-content>
+</ion-app>

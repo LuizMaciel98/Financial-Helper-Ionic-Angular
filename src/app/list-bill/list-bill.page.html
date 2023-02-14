@@ -1,57 +1,63 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>
-      Lista de contas
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-app>
+  <app-global-header></app-global-header>
+  <div class="ion-page" id="main-content">
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>Lista de Despesas</ion-title>
+      </ion-toolbar>
+    </ion-header>
 
-<ion-list>
-  <ion-item>
-    <ion-select placeholder="Modo de exibição" value="{{defaultListView}}" (ionChange)="changeListView($event)">
-      <ion-select-option value="List">Lista</ion-select-option>
-      <ion-select-option value="Table">Tabela</ion-select-option>
-    </ion-select>
-  </ion-item>
-</ion-list>
+    <ion-list>
+      <ion-item>
+        <ion-select placeholder="Modo de exibição" value="{{defaultListView}}" (ionChange)="changeListView($event)">
+          <ion-select-option value="List">Lista</ion-select-option>
+          <ion-select-option value="Table">Tabela</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
 
-<ion-content>
-  <ion-list *ngIf="showListItems">
-    <ion-item *ngFor="let bill of bills">
-      <ion-label>
-        <h2>{{ bill.name }}</h2>
-        <p>Due Date: {{ bill.dueDate }}</p>
-        <p>Price: {{ bill.price }}</p>
-        <p>Paid: {{ bill.paid }}</p>
-        <p>Category: {{ bill.category }}</p>
-        <p>Payment Date: {{ bill.paymentDate }}</p>
-        <p>Reminder: {{ bill.reminder }}</p>
-        <p>Notes: {{ bill.notes }}</p>
-        <ion-button (click)="editBill(bill.primaryKey)">Edit Bill</ion-button>
-      </ion-label>
-    </ion-item>
-  </ion-list>
+    <ion-content>
+      <ion-list *ngIf="showListItems">
+        <ion-item *ngFor="let bill of bills">
+          <ion-label>
+            <h2>{{ bill.name }}</h2>
+            <p>Due Date: {{ bill.dueDate }}</p>
+            <p>Price: {{ bill.price }}</p>
+            <p>Paid: {{ bill.paid }}</p>
+            <p>Category: {{ bill.category }}</p>
+            <p>Payment Date: {{ bill.paymentDate }}</p>
+            <p>Reminder: {{ bill.reminder }}</p>
+            <p>Notes: {{ bill.notes }}</p>
+            <ion-button (click)="editBill(bill.primaryKey)">Edit Bill</ion-button>
+          </ion-label>
+        </ion-item>
+      </ion-list>
 
-  <ion-grid *ngIf="showTableItems">
-    <ion-row>
-      <ion-col>Name</ion-col>
-      <!-- <ion-col>Due Date</ion-col> -->
-      <ion-col>Price</ion-col>
-      <ion-col>Paid</ion-col>
-      <ion-col>Category</ion-col>
-      <!-- <ion-col>Payment Date</ion-col> -->
-      <!-- <ion-col >Reminder</ion-col> -->
-      <!-- <ion-col>Notes</ion-col> -->
-    </ion-row>
-    <ion-row *ngFor="let bill of bills">
-      <ion-col>{{ bill.name }}</ion-col>
-      <!-- <ion-col>{{ bill.dueDate }}</ion-col> -->
-      <ion-col>{{ bill.price }}</ion-col>
-      <ion-col>{{ bill.paid }}</ion-col>
-      <ion-col>{{ bill.category }}</ion-col>
-      <!-- <ion-col>{{ bill.paymentDate }}</ion-col> -->
-      <!-- <ion-col>{{ bill.reminder }}</ion-col> -->
-      <!-- <ion-col>{{ bill.notes }}</ion-col> -->
-    </ion-row>
-  </ion-grid>
-</ion-content>
+      <ion-grid *ngIf="showTableItems">
+        <ion-row>
+          <ion-col>Name</ion-col>
+          <!-- <ion-col>Due Date</ion-col> -->
+          <ion-col>Price</ion-col>
+          <ion-col>Paid</ion-col>
+          <ion-col>Category</ion-col>
+          <!-- <ion-col>Payment Date</ion-col> -->
+          <!-- <ion-col >Reminder</ion-col> -->
+          <!-- <ion-col>Notes</ion-col> -->
+        </ion-row>
+        <ion-row *ngFor="let bill of bills">
+          <ion-col>{{ bill.name }}</ion-col>
+          <!-- <ion-col>{{ bill.dueDate }}</ion-col> -->
+          <ion-col>{{ bill.price }}</ion-col>
+          <ion-col>{{ bill.paid }}</ion-col>
+          <ion-col>{{ bill.category }}</ion-col>
+          <!-- <ion-col>{{ bill.paymentDate }}</ion-col> -->
+          <!-- <ion-col>{{ bill.reminder }}</ion-col> -->
+          <!-- <ion-col>{{ bill.notes }}</ion-col> -->
+        </ion-row>
+      </ion-grid>
+    </ion-content>
+  </div>
+</ion-app>

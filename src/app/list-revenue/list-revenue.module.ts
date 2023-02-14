@@ -10,6 +10,7 @@ import { SQLite } from '@ionic-native/sqlite/ngx';
 import { HttpClientModule } from '@angular/common/http';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { RevenueDataBase } from '../../dataBase/revenue.dataBase';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   imports: [
@@ -17,12 +18,14 @@ import { RevenueDataBase } from '../../dataBase/revenue.dataBase';
     FormsModule,
     IonicModule,
     ListRevenuePageRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    SharedModule
   ],
   providers: [
     SQLite, 
     SQLitePorter,
-    RevenueDataBase
+    RevenueDataBase,
+    SharedModule
   ],
   declarations: [
     ListRevenuePage

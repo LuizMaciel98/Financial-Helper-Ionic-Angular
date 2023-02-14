@@ -1,11 +1,16 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>
-      Criar receita
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-app>
+  <app-global-header></app-global-header>
 
-<ion-content>
-  <app-revenue-form (upsertBillEvent)="onUpsertButtonClick($event)" [revenue]="revenue" [isInsert]="true"></app-revenue-form>
-</ion-content>
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Criar Receita</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <app-revenue-form (upsertBillEvent)="onUpsertButtonClick($event)" [revenue]="revenue" [isInsert]="true"></app-revenue-form>
+  </ion-content>
+</ion-app>

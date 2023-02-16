@@ -1,77 +1,168 @@
 import { Injectable } from '@angular/core';
-import { LocalNotifications, ScheduleOptions, PendingResult, PendingLocalNotificationSchema } from '@capacitor/local-notifications';
+import { LocalNotifications, ScheduleOptions, ScheduleResult, PendingResult, PendingLocalNotificationSchema, LocalNotificationDescriptor } from '@capacitor/local-notifications';
+import { Bill } from 'src/models/bill.model';
+import { Notification } from 'src/models/notification.model';
+import { NotificationDataBase } from 'src/dataBase/notification.dataBase';
 
 @Injectable()
 export class LocalNotificationService {
 
-    constructor() {}
+    constructor(private notificationDataBase: NotificationDataBase) {}
 
-    public scheduleNotification (title: string, body: string, scheduleDate: Date) {
-      let options: ScheduleOptions = {
-        notifications: [{
-          id: this.getAvailableId(),
-          title: "My Test Notification",
-          body: "Local Notification Body",
-          schedule: {
-            at: scheduleDate
-          }
-        }]
-      }
-    }
+    public async dueDateNotification(bill: Bill) {
 
-    public sendNotificationNow (title: string, body: string) {
-      let options: ScheduleOptions = {
-        notifications: [{
-          id: this.getAvailableId(),
-          title: "My Test Notification",
-          body: "Local Notification Body",
-        }]
-      }
+        this.purgeNotificationObject();
 
-      this.schedule(options);
-    }
 
-    private schedule(options: ScheduleOptions) {
-      LocalNotifications.schedule(options).then((result) => {
-        console.log(JSON.stringify(result));
-      });
-    }
+        // CHOOSE AVAILABLE ID
 
-    private getAvailableId () {
-      let availableId:number = 0;
-      
-      LocalNotifications.getPending().then((result) => {
-        if (result != null) {
-          if (result.notifications != null) {
-            let length = result.notifications.length;
-            for (let i = 0; i < length; i ++) {
-              if (availableId === i) {
-                availableId++;
-              } else {
-                break;
-              }
+
+        
+        // SCHEDULE NOTIFICATION
+
+        let dueDate: Date;
+        if (bill.dueDate != null) {
+            dueDate = new Date(bill.dueDate);
+            
+            let scheduled:ScheduleResult;
+
+            let title: string = bill.name + 'vence hoje!!';
+            let body: string = 'Por favor lembre de pagar esta conta!';
+
+            scheduled = await this.scheduleNotification(title, body, dueDate);
+            console.log(JSON.stringify(scheduled));
+
+            if (scheduled != null && scheduled.notifications != null && scheduled.notifications.length > 0) {
+                
+                for (let i = 0; i < scheduled.notifications.length; i++) {
+                    let currentNotif:LocalNotificationDescriptor = scheduled.notifications[i];
+
+                    let notification: Notification = new Notification();
+                    notification.bill = bill.primaryKey;
+                    notification.notificationId = currentNotif.id.toString();
+                    notification.type = 'Duedate Notification';
+
+                    // Create NOTIFICATION ON DB
+                    this.notificationDataBase.createObject(notification);
+                }
             }
-          }
         }
-      });
+    }
+
+    private async purgeNotificationObject() {
+        console.log('purgeNotificationObject');
+
+        let deleteList: Notification[] = []; 
+
+        //GET ALL FROM LOCAL NOTIFICATION
+        //GET ALL FROM DB
+        
+        let pendingLocalNotification: PendingResult = await LocalNotifications.getPending();
+        console.log('pendingLocalNotification');
+        console.log(JSON.stringify(pendingLocalNotification));
+
+        const mapPendingIdObject = new Map<number, PendingLocalNotificationSchema>();
+
+        if (pendingLocalNotification != null) {
+            let pendingLocNotf: PendingLocalNotificationSchema[] = pendingLocalNotification.notifications;
+
+            if (pendingLocNotf != null && pendingLocNotf.length > 0) {
+                for (let i = 0; i < pendingLocNotf.length; i++) {
+                    let currentPendingLocNotf: PendingLocalNotificationSchema = pendingLocNotf[i];
+                    mapPendingIdObject.set(currentPendingLocNotf.id, currentPendingLocNotf);
+                }
+            }
+        }
+        
+        let notificationDB: Notification[];
+        notificationDB = await this.notificationDataBase.readObjects('all') as Notification[];
+        
+        console.log('notificationDB');
+        console.log(JSON.stringify(notificationDB));
+
+        if (mapPendingIdObject != null && mapPendingIdObject.size > 0) {
+            if (notificationDB != null && notificationDB.length > 0) {
+                notificationDB.forEach(currentNotificationDB => {
+                    let localNotif = mapPendingIdObject.get(parseInt(currentNotificationDB.notificationId));
+
+                    if (localNotif == null) {
+                        //delete notificationDB
+                        deleteList.push(currentNotificationDB);
+                    }
+                });
+            }
+        }
+
+        // deleteList.forEach(async currentElement => {
+
+        if (deleteList != null && deleteList.length > 0) {
+            for (let i = 0; i < deleteList.length; i++) {
+                let currentElement: Notification = deleteList[i]; 
+
+                if (currentElement.primaryKey != null) {
+                    await this.notificationDataBase.deleteObject(currentElement.primaryKey.toString());
+                }
+            }
+        }
+        // });
+    }
+
+    private async scheduleNotification (title: string, body: string, scheduleDate: Date) {
+        let availableId: number = await this.getAvailableId();
+
+        let options: ScheduleOptions = {
+            notifications: [{
+                id: availableId,
+                title: "My Test Notification",
+                body: "Local Notification Body",
+                schedule: {
+                    at: scheduleDate
+                }
+            }]
+        }
+
+        console.log(JSON.stringify(options));
+
+        return await this.schedule(options) as ScheduleResult;
+    }
+
+    public async sendNotificationNow (title: string, body: string) {
+        let availableId: number = await this.getAvailableId();
+
+        let options: ScheduleOptions = {
+            notifications: [{
+                id: availableId,
+                title: "My Test Notification",
+                body: "Local Notification Body",
+            }]
+        }
+
+      return this.schedule(options);
+    }
+
+    private async schedule(options: ScheduleOptions) {
+        return await LocalNotifications.schedule(options);
+    }
+
+    private async getAvailableId () {
+        let availableId:number = 0;
+        
+        await LocalNotifications.getPending().then((result) => {
+            if (result != null) {
+                if (result.notifications != null) {
+                    let length = result.notifications.length;
+                    for (let i = 0; i < length; i ++) {
+                        if (availableId === i) {
+                            availableId++;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+            }
+        });
 
       return availableId;
     }
-
-    // public simpleNotif() {
-    //   console.log('simpleNotif');
-
-      
-
-    //   // LocalNotifications.schedule(options).then((result) =>{
-    //   //   console.log(JSON.stringify(result));
-    //   // });
-
-    //   // this.LocalNotifications.schedule({
-    //   //   id: 1,
-    //   //   text: 'Single Local Notification',
-    //   //   // data: { secret: 'secret' }
-    //   // });
-    //   }
 
 }

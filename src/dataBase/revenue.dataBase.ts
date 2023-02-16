@@ -44,7 +44,10 @@ export class RevenueDataBase implements DatabaseCRUD {
         if (!this.db) {
             await this.createDatabase();
         }
-        const data = [revenue.type, revenue.amount, revenue.date];
+
+        let revenueDate: string = this.getRevenueDateFormatted(revenue.date);
+
+        const data = [revenue.type, revenue.amount, revenueDate];
         if (this.db){
             try {
                 console.log('TRIED TO INSERT');
@@ -126,18 +129,32 @@ export class RevenueDataBase implements DatabaseCRUD {
 
     // Delete
     async deleteObject(primaryKey: string) {
-    if (!this.db) {
-        await this.createDatabase();
-    }
-    if (this.db) {
-        try {
-            return this.db.executeSql('DELETE FROM revenues WHERE primaryKey=?', [primaryKey]);
-        } catch (error) {
-            console.error(error);
+        if (!this.db) {
+            await this.createDatabase();
+        }
+        if (this.db) {
+            try {
+                return this.db.executeSql('DELETE FROM revenues WHERE primaryKey=?', [primaryKey]);
+            } catch (error) {
+                console.error(error);
+            }
         }
     }
-}
 
+    getRevenueDateFormatted(billDate: Date) {
+        let year: string = billDate.getFullYear().toString();
+        let month: string = this.convertToOneBased(billDate.getMonth()).toString();
+        let day: string = billDate.getDate().toString();
 
+        if (month.length == 1) {
+            month = '0' + month;
+        }
+
+        return year + '-' + month + '-' + day;
+    }
+
+    convertToOneBased(zeroBased: number) {
+        return zeroBased++;
+    }
 
 }

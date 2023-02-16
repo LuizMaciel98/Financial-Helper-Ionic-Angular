@@ -1,5 +1,5 @@
 export class Bill {
-    primaryKey: string;
+    primaryKey: number | null;
     name: string;
     dueDate: Date | null;
     price: number | null;
@@ -13,7 +13,7 @@ export class Bill {
     isRecurrent: boolean;
 
     public constructor() {
-        this.primaryKey = '';
+        this.primaryKey = null;
         this.name = '';
         this.dueDate = null;
         this.price = 0;

@@ -42,7 +42,7 @@ export class BillService {
     private async createRecurrentBill(bill: Bill) {
         let frequency: string = bill.frequency as string;
         
-        this.billRecurrent = await this.billRecurrentDataBase.createObject(new BillRecurrent('', frequency));
+        this.billRecurrent = await this.billRecurrentDataBase.createObject(new BillRecurrent(null , frequency));
         
         bill.billRecurrent = this.billRecurrent.insertId;
         

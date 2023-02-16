@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { Bill } from '../models/bill.model';
 import { DatabaseCRUD } from '../interfaces/databaseCRUD';
+import { DatabaseUtils, InsertQuery } from '../utils/databaseUtils';
 
 @Injectable()
 export class BillDataBase implements DatabaseCRUD {
@@ -32,6 +33,8 @@ export class BillDataBase implements DatabaseCRUD {
                     reminder BOOLEAN,
                     notes TEXT,
                     billRecurrent INTEGER,
+                    frequency TEXT,
+                    isRecurrent BOOLEAN,
                     FOREIGN KEY (billRecurrent) REFERENCES billsRecurrent(primaryKey)
                     )
                 `, []);
@@ -45,24 +48,20 @@ export class BillDataBase implements DatabaseCRUD {
     }
 
     async createObject(bill: Bill | any) {
+
         if (!this.db) {
             await this.createDatabase();
         }
-        let billDueDate = new Date(bill.dueDate);
-
-        let billDateMonth: string;
-        billDateMonth = (billDueDate.getMonth() + 1).toString();
-        if (billDateMonth.length == 1)
-            billDateMonth = '0' + billDateMonth;
-
-        let dueDateString = billDueDate.getFullYear() + '-' + billDateMonth + '-' + billDueDate.getDate();
-
-        const data = await [bill.name, dueDateString, bill.price, bill.paid, bill.category, bill.paymentDate, bill.reminder, bill.notes, bill.billRecurrent];
         if (this.db) {
             try {
-                return await this.db.executeSql('INSERT INTO bills (name, dueDate, price, paid, category, paymentDate, reminder, notes, billRecurrent) VALUES (?,?,?,?,?,?,?,?,?)', data);
+                let insertQuery: InsertQuery = DatabaseUtils.getInsertQuery(bill);
+
+                return await this.db.executeSql(
+                    'INSERT INTO bills (' + insertQuery.insertQueryFields + ') VALUES (' + insertQuery.insertQueryValuesSize + ')', insertQuery.insertQueryValues
+                );
             } catch (error) {
-                console.error(error);
+                console.log(error);
+                console.log(JSON.stringify(error));
             }
         }
     }

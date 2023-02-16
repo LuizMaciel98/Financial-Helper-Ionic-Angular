@@ -14,302 +14,306 @@ import { BillService } from 'src/services/bill.service';
 // import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+    selector: 'app-home',
+    templateUrl: 'home.page.html',
+    styleUrls: ['home.page.scss'],
 })
 export class HomePage implements OnInit, AfterViewInit, OnDestroy  {
-  choosedYear: string;
-  choosedMonth: string;
-  choosedDate: Date;
-  choosedMonthExpenses: number;
-  choosedMonthRevenues: number;
-  choosedMonthBalance: number;
-  formattedChoosedMonthExpenses: any;
-  formattedChoosedMonthRevenues: any;
-  formattedChoosedMonthBalance: any;
+    choosedYear: string;
+    choosedMonth: string;
+    choosedDate: Date;
+    choosedMonthExpenses: number;
+    choosedMonthRevenues: number;
+    choosedMonthBalance: number;
+    formattedChoosedMonthExpenses: any;
+    formattedChoosedMonthRevenues: any;
+    formattedChoosedMonthBalance: any;
 
-  @ViewChild('barCanvas') private barCanvas: ElementRef | any;
+    @ViewChild('barCanvas') private barCanvas: ElementRef | any;
 
-  barChart: any;
+    barChart: any;
 
-  billsChoosedMonth: Bill[];
-  revenuesChoosedMonth: Revenue[];
+    billsChoosedMonth: Bill[];
+    revenuesChoosedMonth: Revenue[];
 
-  hasOverdueBills: boolean = false;
-  hasCloseDueDate: boolean = false;
+    hasOverdueBills: boolean = false;
+    hasCloseDueDate: boolean = false;
 
-  overdueBills: Bill[] = [];
+    overdueBills: Bill[] = [];
 
-  constructor(
-    public modalCtrl: ModalController,
-    private router: Router,
-    public billDataBase: BillDataBase,
-    public billService: BillService,
-    public revenueDataBase: RevenueDataBase,
-    private currencyPipe: CurrencyPipe,
-    private actionSheetCtrl: ActionSheetController,
-    private localNotificationService: LocalNotificationService,
-    // private localNotifications: LocalNotifications
-    ) {
+    constructor(
+        public modalCtrl: ModalController,
+        private router: Router,
+        public billDataBase: BillDataBase,
+        public billService: BillService,
+        public revenueDataBase: RevenueDataBase,
+        private currencyPipe: CurrencyPipe,
+        private actionSheetCtrl: ActionSheetController,
+        private localNotificationService: LocalNotificationService,
+        // private localNotifications: LocalNotifications
+        ) {
 
-    // localNotificationService.simpleNotif();
+        
 
-    let date = new Date();
+        let date = new Date();
 
-    this.choosedDate = new Date(date.getFullYear(), date.getMonth(), 1);
-    this.choosedMonth = this.choosedDate.toLocaleString('default', { month: 'long' });
-    this.choosedYear = this.choosedDate.getFullYear().toString();
+        this.choosedDate = new Date(date.getFullYear(), date.getMonth(), 1);
+        this.choosedMonth = this.choosedDate.toLocaleString('default', { month: 'long' });
+        this.choosedYear = this.choosedDate.getFullYear().toString();
 
-    this.billsChoosedMonth = [];
-    this.revenuesChoosedMonth = [];
-    this.choosedMonthExpenses = 0;
-    this.choosedMonthExpenses = 0;
-    this.choosedMonthRevenues = 0;
-    this.choosedMonthBalance = 0;
-    
-    this.calculateChoosedMonth();
-    this.calculateCloseAndOverdueBills();
-  }
-
-  async ngOnInit() {
-    await this.calculateInitialChoosedMonth();
-    await this.calculateChoosedMonth();
-  }
-
-  ionViewWillEnter() {
-    this.calculateInitialChoosedMonth();
-    this.calculateChoosedMonth();
-  }
-
-  ngOnDestroy() {
-    // Likewise, this will may not consistently fire when you navigate away
-    // from the component
-    console.log("LoginPage - OnDestroy")
-  }
-
-  async calculateCloseAndOverdueBills() {
-    console.log('calculateCloseAndOverdueBills');
-    this.overdueBills = await this.billService.getOverdueBill();
-
-    if (this.overdueBills.length > 0){
-      this.hasOverdueBills = true;
-    }
-    console.log('this.overdueBills' + JSON.stringify(this.overdueBills));
-  }
-
-  calculateInitialChoosedMonth() {
-    if (this.choosedDate != undefined) {
-      this.choosedMonth = this.choosedDate.toLocaleString('default', { month: 'long' });
-      this.choosedYear = this.choosedDate.getFullYear().toString();
+        this.billsChoosedMonth = [];
+        this.revenuesChoosedMonth = [];
+        this.choosedMonthExpenses = 0;
+        this.choosedMonthExpenses = 0;
+        this.choosedMonthRevenues = 0;
+        this.choosedMonthBalance = 0;
+        
+        this.calculateChoosedMonth();
+        this.calculateCloseAndOverdueBills();
     }
 
-    return this.choosedMonth;
-  }
-
-  calculateMonthString() {
-    let monthNumer = (this.choosedDate.getMonth());
-    
-    monthNumer = (this.choosedDate.getMonth() + 1);
-
-    let month : string = monthNumer.toString();
-    if(month.length == 1) {
-      month = '0' + month;
-    }
-    return month;
-  }
-
-  async calculateChoosedMonth() {
-    await this.calculateChoosedMonthExpenses();
-    await this.calculateChoosedMonthRevenues();
-    
-    this.choosedMonthBalance = this.choosedMonthRevenues - this.choosedMonthExpenses;
-    this.formattedChoosedMonthBalance = await this.currencyPipe.transform(this.choosedMonthBalance, 'BRL', true);
-
-    await this.barChartMethod();
-    this.barChart.update();
-  }
-
-  async calculateChoosedMonthExpenses() {
-    let month = this.calculateMonthString();
-    let year = this.choosedDate.getFullYear().toString();
-
-    let query = {
-      dueDate: {
-        month: month,
-        year: year
-      }
-    };
-    console.log(JSON.stringify(query));
-    this.billsChoosedMonth = await this.billDataBase.readObjects(query) as Bill[];
-
-    console.log(this.billsChoosedMonth);
-
-    this.choosedMonthExpenses = 0;
-    if(this.billsChoosedMonth != undefined && this.billsChoosedMonth.length > 0) {
-      this.billsChoosedMonth.forEach(bill => {
-        if(bill.price != undefined && bill.price != null)
-          this.choosedMonthExpenses = this.choosedMonthExpenses + bill.price;
-      });
+    async ngOnInit() {
+        await this.calculateInitialChoosedMonth();
+        await this.calculateChoosedMonth();
     }
 
-    this.formattedChoosedMonthExpenses = await this.currencyPipe.transform(this.choosedMonthExpenses, 'BRL', true);
-  }
-
-  async calculateChoosedMonthRevenues() {
-    let month = this.calculateMonthString();
-    let year = this.choosedDate.getFullYear().toString();
-  
-    let query = {
-      date: {
-        month: month,
-        year: year
-      }
-    };
-    this.revenuesChoosedMonth = await this.revenueDataBase.readObjects(query) as Revenue[];
-  
-    this.choosedMonthRevenues = 0;
-    if (this.revenuesChoosedMonth != undefined && this.revenuesChoosedMonth.length > 0) {
-      this.revenuesChoosedMonth.forEach(revenue => {
-        if (revenue.amount != undefined && revenue.amount != null)
-          this.choosedMonthRevenues = this.choosedMonthRevenues + revenue.amount;
-      });
+    ionViewWillEnter() {
+        this.calculateInitialChoosedMonth();
+        this.calculateChoosedMonth();
     }
-  
-    this.formattedChoosedMonthRevenues = await this.currencyPipe.transform(this.choosedMonthRevenues, 'BRL', true);
-  }
-  
 
-  navigateToListBill() {
-    this.router.navigate(['/list-bill'], { replaceUrl: true });
-  }
-  
-  navigateToInsertBill() {
-    this.router.navigate(['/insert-bill'], { replaceUrl: true });
-  }
-  
-  navigateToInsertRevenue(){
-    this.router.navigate(['/insert-revenue'], { replaceUrl: true });
-  }
-  
-  navigateToListRevenue(){
-    this.router.navigate(['/list-revenue'], { replaceUrl: true });
-  }
+    ngOnDestroy() {
+        // Likewise, this will may not consistently fire when you navigate away
+        // from the component
+        console.log("LoginPage - OnDestroy")
+    }
 
-  navigateToNextMonth() {
-    console.log(JSON.stringify('navigateToNextMonth'));
+    async calculateCloseAndOverdueBills() {
+        console.log('calculateCloseAndOverdueBills');
+        this.overdueBills = await this.billService.getOverdueBill();
 
-    this.choosedDate.setMonth(this.choosedDate.getMonth() + 1);
-    this.choosedMonth = this.choosedDate.toLocaleString('default', { month: 'long' });
-    this.choosedYear = this.choosedDate.getFullYear().toString();
-    console.log(JSON.stringify(this.choosedYear));
-
-    this.calculateChoosedMonth();
-  }
-
-  navigateToPreviousMonth() {
-    this.choosedDate.setMonth(this.choosedDate.getMonth() - 1);
-    this.choosedMonth = this.choosedDate.toLocaleString('default', { month: 'long' });
-    this.choosedYear = this.choosedDate.getFullYear().toString();
-
-    this.calculateChoosedMonth();
-  }
-
-  ngAfterViewInit () {
-    this.barChartMethod();
-    this.barChart.update();
-  }
-
-  barChartMethod() {
-    
-    if(this.barChart == null){
-      this.barChart = new Chart(this.barCanvas.nativeElement, {
-        type: 'bar',
-        data: {
-          labels: ['Receitas', 'Despesas'],
-          datasets: this.getDataSets()
-        },
-        options: {
-          scales: {
-              y: {
-                  ticks: {
-                      callback: function(value, index, ticks) {
-                          return 'R$' + value;
-                      }
-                  }
-              }
-          }
+        if (this.overdueBills.length > 0){
+        this.hasOverdueBills = true;
         }
-      });
-    } else {
-      this.barChart.data.datasets.forEach((dataset : any) => {
-        dataset.data.pop();
-      });
-
-      this.barChart.update();
-
-      this.barChart.data.datasets = this.getDataSets();
-      this.barChart.update();
+        console.log('this.overdueBills' + JSON.stringify(this.overdueBills));
     }
-  }
 
-  getDataSets() {
-    let result = [
-      // datasets: [
-        {
-          data: [this.choosedMonthRevenues, this.choosedMonthExpenses], 
-          label: this.choosedMonth,
-          backgroundColor: ['rgba(121, 255, 70, 0.9)', 'rgba(255, 95, 86, 0.9)'],
-          // backgroundColor: ['rgba(255, 95, 86, 0.9)'],
-          // borderWidth: 1
-        },
-        // {
-        //   data: [this.choosedMonthExpenses], 
-        //   label: 'Despesas',
-        //   backgroundColor: ['rgba(255, 95, 86, 0.9)'],
-        //   // borderWidth: 1
-        // },
-      // ]
-    ];
+    calculateInitialChoosedMonth() {
+        if (this.choosedDate != undefined) {
+        this.choosedMonth = this.choosedDate.toLocaleString('default', { month: 'long' });
+        this.choosedYear = this.choosedDate.getFullYear().toString();
+        }
 
-    return result;
-  }
+        return this.choosedMonth;
+    }
+
+    calculateMonthString() {
+        let monthNumer = (this.choosedDate.getMonth());
+        
+        monthNumer = (this.choosedDate.getMonth() + 1);
+
+        let month : string = monthNumer.toString();
+        if (month.length == 1) {
+        month = '0' + month;
+        }
+        return month;
+    }
+
+    async calculateChoosedMonth() {
+        await this.calculateChoosedMonthExpenses();
+        await this.calculateChoosedMonthRevenues();
+        
+        this.choosedMonthBalance = this.choosedMonthRevenues - this.choosedMonthExpenses;
+        this.formattedChoosedMonthBalance = await this.currencyPipe.transform(this.choosedMonthBalance, 'BRL', true);
+
+        await this.barChartMethod();
+        this.barChart.update();
+    }
+
+    async calculateChoosedMonthExpenses() {
+        let month = this.calculateMonthString();
+        let year = this.choosedDate.getFullYear().toString();
+
+        let query = {
+        dueDate: {
+            month: month,
+            year: year
+        }
+        };
+        console.log(JSON.stringify(query));
+        this.billsChoosedMonth = await this.billDataBase.readObjects(query) as Bill[];
+
+        
+        // if(this.billsChoosedMonth != null && this.billsChoosedMonth.length > 0)
+        //   await this.localNotificationService.dueDateNotification(this.billsChoosedMonth[0]);
+
+        console.log(this.billsChoosedMonth);
+
+        this.choosedMonthExpenses = 0;
+        if (this.billsChoosedMonth != undefined && this.billsChoosedMonth.length > 0) {
+        this.billsChoosedMonth.forEach(bill => {
+            if (bill.price != undefined && bill.price != null)
+            this.choosedMonthExpenses = this.choosedMonthExpenses + bill.price;
+        });
+        }
+
+        this.formattedChoosedMonthExpenses = await this.currencyPipe.transform(this.choosedMonthExpenses, 'BRL', true);
+    }
+
+    async calculateChoosedMonthRevenues() {
+        let month = this.calculateMonthString();
+        let year = this.choosedDate.getFullYear().toString();
+    
+        let query = {
+        date: {
+            month: month,
+            year: year
+        }
+        };
+        this.revenuesChoosedMonth = await this.revenueDataBase.readObjects(query) as Revenue[];
+    
+        this.choosedMonthRevenues = 0;
+        if (this.revenuesChoosedMonth != undefined && this.revenuesChoosedMonth.length > 0) {
+        this.revenuesChoosedMonth.forEach(revenue => {
+            if (revenue.amount != undefined && revenue.amount != null)
+            this.choosedMonthRevenues = this.choosedMonthRevenues + revenue.amount;
+        });
+        }
+    
+        this.formattedChoosedMonthRevenues = await this.currencyPipe.transform(this.choosedMonthRevenues, 'BRL', true);
+    }
+  
+
+    navigateToListBill() {
+        this.router.navigate(['/list-bill'], { replaceUrl: true });
+    }
+  
+    navigateToInsertBill() {
+        this.router.navigate(['/insert-bill'], { replaceUrl: true });
+    }
+  
+    navigateToInsertRevenue(){
+        this.router.navigate(['/insert-revenue'], { replaceUrl: true });
+    }
+  
+    navigateToListRevenue(){
+        this.router.navigate(['/list-revenue'], { replaceUrl: true });
+    }
+
+    navigateToNextMonth() {
+        console.log(JSON.stringify('navigateToNextMonth'));
+
+        this.choosedDate.setMonth(this.choosedDate.getMonth() + 1);
+        this.choosedMonth = this.choosedDate.toLocaleString('default', { month: 'long' });
+        this.choosedYear = this.choosedDate.getFullYear().toString();
+        console.log(JSON.stringify(this.choosedYear));
+
+        this.calculateChoosedMonth();
+    }
+
+    navigateToPreviousMonth() {
+        this.choosedDate.setMonth(this.choosedDate.getMonth() - 1);
+        this.choosedMonth = this.choosedDate.toLocaleString('default', { month: 'long' });
+        this.choosedYear = this.choosedDate.getFullYear().toString();
+
+        this.calculateChoosedMonth();
+    }
+
+    ngAfterViewInit () {
+        this.barChartMethod();
+        this.barChart.update();
+    }
+
+    barChartMethod() {
+        
+        if (this.barChart == null){
+        this.barChart = new Chart(this.barCanvas.nativeElement, {
+            type: 'bar',
+            data: {
+            labels: ['Receitas', 'Despesas'],
+            datasets: this.getDataSets()
+            },
+            options: {
+            scales: {
+                y: {
+                    ticks: {
+                        callback: function(value, index, ticks) {
+                            return 'R$' + value;
+                        }
+                    }
+                }
+            }
+            }
+        });
+        } else {
+        this.barChart.data.datasets.forEach((dataset : any) => {
+            dataset.data.pop();
+        });
+
+        this.barChart.update();
+
+        this.barChart.data.datasets = this.getDataSets();
+        this.barChart.update();
+        }
+    }
+
+    getDataSets() {
+        let result = [
+        // datasets: [
+            {
+                data: [this.choosedMonthRevenues, this.choosedMonthExpenses], 
+                label: this.choosedMonth,
+                backgroundColor: ['rgba(121, 255, 70, 0.9)', 'rgba(255, 95, 86, 0.9)'],
+                // backgroundColor: ['rgba(255, 95, 86, 0.9)'],
+                // borderWidth: 1
+            },
+                // {
+                //   data: [this.choosedMonthExpenses], 
+                //   label: 'Despesas',
+                //   backgroundColor: ['rgba(255, 95, 86, 0.9)'],
+                //   // borderWidth: 1
+                // },
+        // ]
+        ];
+
+        return result;
+    }
 
 
-  testButton() {
-    console.log('testButton');
-  }
+    testButton() {
+        console.log('testButton');
+    }
 
-  async presentActionSheet() {
-    const actionSheet = await this.actionSheetCtrl.create({
-      header: 'Criar novos itens',
-      // subHeader: 'Example subheader',
-      mode: 'ios',
-      buttons: [
-        {
-          text: 'Criar receita',
-          handler: () => {
-            this.navigateToInsertRevenue();
-          },
-        },
-        {
-          text: 'Criar conta',
-          handler: () => {
-            this.navigateToInsertBill();
-          }
-        },
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          data: {
-            action: 'cancel',
-          },
-        },
-      ],
-    });
+    async presentActionSheet() {
+        const actionSheet = await this.actionSheetCtrl.create({
+            header: 'Criar novos itens',
+            // subHeader: 'Example subheader',
+            mode: 'ios',
+            buttons: [
+            {
+                text: 'Criar receita',
+                handler: () => {
+                this.navigateToInsertRevenue();
+                },
+            },
+            {
+                text: 'Criar conta',
+                handler: () => {
+                this.navigateToInsertBill();
+                }
+            },
+            {
+                text: 'Cancel',
+                role: 'cancel',
+                data: {
+                action: 'cancel',
+                },
+            },
+            ],
+        });
 
-    await actionSheet.present();
+        await actionSheet.present();
 
-    const result = await actionSheet.onDidDismiss();
-  }
+        const result = await actionSheet.onDidDismiss();
+    }
 }

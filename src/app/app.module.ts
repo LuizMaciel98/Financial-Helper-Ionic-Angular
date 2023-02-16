@@ -15,6 +15,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 // import { BillFormComponent } from './bill-form/bill-form.component';
 
+import { NotificationDataBase } from '../dataBase/notification.dataBase';
+
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -27,7 +30,7 @@ import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
   providers: [
     SQLite, 
     SQLitePorter, 
-    // LocalNotifications,
+    NotificationDataBase,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [

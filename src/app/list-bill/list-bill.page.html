@@ -7,6 +7,7 @@
           <ion-menu-button></ion-menu-button>
         </ion-buttons>
         <ion-title>Lista de Despesas</ion-title>
+        
       </ion-toolbar>
     </ion-header>
 
@@ -24,13 +25,13 @@
         <ion-item *ngFor="let bill of bills">
           <ion-label>
             <h2>{{ bill.name }}</h2>
-            <p>Due Date: {{ bill.dueDate }}</p>
-            <p>Price: {{ bill.price }}</p>
-            <p>Paid: {{ bill.paid }}</p>
-            <p>Category: {{ bill.category }}</p>
-            <p>Payment Date: {{ bill.paymentDate }}</p>
-            <p>Reminder: {{ bill.reminder }}</p>
-            <p>Notes: {{ bill.notes }}</p>
+            <p>Data de vencimento: {{ bill.dueDate }}</p>
+            <p>Preço: {{ bill.price }}</p>
+            <p>Pago?: {{ bill.paid }}</p>
+            <p>Categoria: {{ bill.category }}</p>
+            <p>Data de pagamento: {{ bill.paymentDate }}</p>
+            <!-- <p>: {{ bill.reminder }}</p> -->
+            <p>Anotações: {{ bill.notes }}</p>
             <ion-button (click)="editBill(bill.primaryKey)">Edit Bill</ion-button>
           </ion-label>
         </ion-item>
@@ -38,11 +39,11 @@
 
       <ion-grid *ngIf="showTableItems">
         <ion-row>
-          <ion-col>Name</ion-col>
+          <ion-col>Nome</ion-col>
           <!-- <ion-col>Due Date</ion-col> -->
-          <ion-col>Price</ion-col>
-          <ion-col>Paid</ion-col>
-          <ion-col>Category</ion-col>
+          <ion-col>Preço</ion-col>
+          <ion-col>Pago?</ion-col>
+          <ion-col>Categoria</ion-col>
           <!-- <ion-col>Payment Date</ion-col> -->
           <!-- <ion-col >Reminder</ion-col> -->
           <!-- <ion-col>Notes</ion-col> -->

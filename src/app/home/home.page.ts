@@ -11,7 +11,10 @@ import { Chart } from 'chart.js';
 import { Router } from '@angular/router';
 import { ActionSheetController } from '@ionic/angular';
 import { BillService } from 'src/services/bill.service';
-// import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+
+// import {  } from 'cordova-plugin-android-permissions';
+// import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
+import { Device } from '@capacitor/device';
 
 @Component({
     selector: 'app-home',
@@ -50,10 +53,10 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy  {
         private currencyPipe: CurrencyPipe,
         private actionSheetCtrl: ActionSheetController,
         private localNotificationService: LocalNotificationService,
-        // private localNotifications: LocalNotifications
-        ) {
+        // private androidPermissions: AndroidPermissions
+    ) {
 
-        
+        this.handlePermissions();
 
         let date = new Date();
 
@@ -86,6 +89,53 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy  {
         // Likewise, this will may not consistently fire when you navigate away
         // from the component
         console.log("LoginPage - OnDestroy")
+    }
+
+    private async handlePermissions(){
+        console.log('handlePermissions');
+        const deviceInfo = await Device.getInfo();
+
+        console.log(JSON.stringify(deviceInfo.platform));
+
+        if (deviceInfo.platform == 'android') {
+
+            
+
+            // var androidPermissions = this.androidPermissions;
+            // var permissions = this.androidPermissions.PERMISSION;
+
+            // let notificationsResult: any = await androidPermissions.hasPermission(permissions.CAMERA);
+            // let hasPostNotificationPermission: boolean = notificationsResult.hasPermission;
+            // console.log('notificationsResult:' + JSON.stringify(notificationsResult));
+            // console.log('notificationsResult:' + JSON.stringify(notificationsResult.hasPermission));
+            // console.log('notificationsResult:' + notificationsResult);
+
+            // if (hasPostNotificationPermission == false) {
+            //     console.log('tried to get permission');
+            //     // try {
+
+            //         // console.log(JSON.stringify(await androidPermissions.requestPermission(permissions.CAMERA)));
+            //         this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.CAMERA).then((data:any) => {
+            //             console.log(JSON.stringify(data));
+            //             if(data.hasPermission) {
+            //                console.log("have permission");
+            //             }
+            //         });
+            //     // } catch (e) {
+            //     //     console.log(e);
+            //     //     console.log('Exception:' + JSON.stringify(e));
+            //     // }
+
+                
+            // }
+
+            
+        } else {
+            // IOS SETUP
+        }
+        
+        
+        
     }
 
     async calculateCloseAndOverdueBills() {
@@ -297,7 +347,7 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy  {
                 },
             },
             {
-                text: 'Criar conta',
+                text: 'Criar despesa',
                 handler: () => {
                 this.navigateToInsertBill();
                 }

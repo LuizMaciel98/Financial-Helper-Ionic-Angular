@@ -17,27 +17,28 @@ import { RevenueFormComponent } from '../components/revenue-form/revenue-form.co
 })
 export class InsertRevenuePage implements OnInit {
 
-  revenue: Revenue | any;
+    revenue: Revenue | any;
 
-  constructor(private router: Router, private toastController: ToastController, private revenueDataBase: RevenueDataBase) {
-    this.revenue = new Revenue('', '', '', null, '');
-  }
+    constructor(private navCtrl: NavController, private toastController: ToastController, private revenueDataBase: RevenueDataBase) {
+        this.revenue = new Revenue('', '', '', null, '');
+    }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
 
-  async onUpsertButtonClick(revenue: Revenue) {
-    await this.revenueDataBase.createObject(revenue);
+    async onUpsertButtonClick(revenue: Revenue) {
+        await this.revenueDataBase.createObject(revenue);
 
-    this.router.navigate(['/home']);
+        this.navCtrl.navigateRoot('home');
+        this.navCtrl.pop();
 
-    const toast = await this.toastController.create({
-      message: 'Receita criada!',
-      duration: 1500,
-      position: 'top'
-    });
+        const toast = await this.toastController.create({
+        message: 'Receita criada!',
+        duration: 1500,
+        position: 'top'
+        });
 
-    await toast.present();
-  }
+        await toast.present();
+    }
 
 }

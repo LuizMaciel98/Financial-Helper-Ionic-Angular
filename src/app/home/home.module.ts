@@ -16,6 +16,7 @@ import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { CurrencyPipe } from '@angular/common';
 import { NgChartsModule } from 'ng2-charts';
 import { SharedModule } from '../shared/shared.module';
+// import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
 
 @NgModule({
   imports: [
@@ -41,7 +42,6 @@ import { SharedModule } from '../shared/shared.module';
     SQLitePorter,
     CurrencyPipe,
     LocalNotificationService,
-    // LocalNotifications
   ],
   declarations: [HomePage],
 

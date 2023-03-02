@@ -19,9 +19,7 @@ export class InsertBillPage {
 
   bill: Bill | any;
 
-
-
-  constructor(private router: Router, private toastController: ToastController, private billService: BillService) {
+  constructor(private navCtrl: NavController, private toastController: ToastController, private billService: BillService) {
       this.bill = new Bill();
 
       this.bill.name = '';
@@ -34,23 +32,22 @@ export class InsertBillPage {
       this.bill.notes = '';
   }
 
-  async ngOnInit() {
-  }
+    async ngOnInit() {
+    }
 
-  async onUpsertButtonClick(bill: Bill) {
+    async onUpsertButtonClick(bill: Bill) {
 
-      await this.billService.createBill(bill);
+        await this.billService.createBill(bill);
 
-      // await this.billDataBase.createObject(bill);
+        this.navCtrl.navigateRoot('home');
+        this.navCtrl.pop();
 
-      this.router.navigate(['/home']);
+        const toast = await this.toastController.create({
+            message: 'Conta criada!',
+            duration: 1500,
+            position: 'top'
+        });
 
-      const toast = await this.toastController.create({
-          message: 'Conta criada!',
-          duration: 1500,
-          position: 'top'
-      });
-
-      await toast.present();
-  }
+        await toast.present();
+    }
 }

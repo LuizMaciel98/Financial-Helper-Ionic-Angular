@@ -9,44 +9,66 @@ export class LocalNotificationService {
 
     constructor(private notificationDataBase: NotificationDataBase) {}
 
-    public async dueDateNotification(bill: Bill) {
-
+    public async createNotification(bill: Bill, type: string) {
+        console.log('LocalNotificationService.createNotification');
         this.purgeNotificationObject();
 
+        if (type == 'overdue') {
+            await this.createOverDueDateNotification(bill);
+        } else if (type == 'dueDate') {
+            await this.createDueDateNotification(bill);
+        }
+    }
 
-        // CHOOSE AVAILABLE ID
+    private async createOverDueDateNotification(bill: Bill) {
+        let scheduleDate: Date = new Date();
+        if (bill.dueDate != null)
+            scheduleDate = new Date(bill.dueDate);
 
+        scheduleDate.setDate(scheduleDate.getDate() + 1);
+        let title: string = bill.name + 'está vencida!!';
+        let body: string = 'Por favor lembre de pagar esta conta!';
+        this.scheduleAndCreateNotification(bill, title, body, scheduleDate);
+    }
 
-        
-        // SCHEDULE NOTIFICATION
+    private async createDueDateNotification(bill: Bill) {
+        let scheduleDate: Date = new Date();
+        if (bill.dueDate != null)
+            scheduleDate = new Date(bill.dueDate);
+        let title: string = bill.name + 'vence hoje!!';
+        let body: string = 'Por favor lembre de pagar esta conta!';
+        this.scheduleAndCreateNotification(bill, title, body, scheduleDate);
+    }
 
-        let dueDate: Date;
-        if (bill.dueDate != null) {
-            dueDate = new Date(bill.dueDate);
+    private async scheduleAndCreateNotification(bill: Bill, title: string, body: string, scheduleDate: Date) {
+        // let dueDate: Date;
+        // if (bill.dueDate != null) {
+        //     dueDate = new Date(bill.dueDate);
             
             let scheduled:ScheduleResult;
 
-            let title: string = bill.name + 'vence hoje!!';
-            let body: string = 'Por favor lembre de pagar esta conta!';
-
-            scheduled = await this.scheduleNotification(title, body, dueDate);
+            scheduled = await this.scheduleNotification(title, body, scheduleDate);
             console.log(JSON.stringify(scheduled));
 
             if (scheduled != null && scheduled.notifications != null && scheduled.notifications.length > 0) {
-                
                 for (let i = 0; i < scheduled.notifications.length; i++) {
                     let currentNotif:LocalNotificationDescriptor = scheduled.notifications[i];
 
-                    let notification: Notification = new Notification();
-                    notification.bill = bill.primaryKey;
-                    notification.notificationId = currentNotif.id.toString();
-                    notification.type = 'Duedate Notification';
+                    console.log('bill:' + JSON.stringify(bill));
 
-                    // Create NOTIFICATION ON DB
-                    this.notificationDataBase.createObject(notification);
+                    this.createNotificationObject(bill.primaryKey, currentNotif.id.toString());
                 }
             }
-        }
+        // }
+    }
+
+    private async createNotificationObject(primaryKey: number | any, currentNotifId: string) {
+        let notification: Notification = new Notification();
+        notification.bill = primaryKey;
+        notification.notificationId = currentNotifId;
+        notification.type = 'Duedate Notification';
+
+        this.notificationDataBase.createObject(notification);
     }
 
     private async purgeNotificationObject() {

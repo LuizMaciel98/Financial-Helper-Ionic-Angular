@@ -4,6 +4,7 @@ import { Bill } from '../models/bill.model';
 import { BillRecurrent } from '../models/billRecurrent.model';
 import { BillDataBase } from '../dataBase/bill.dataBase';
 import { BillRecurrentDataBase } from '../dataBase/billRecurrent.dataBase';
+import { LocalNotificationService } from '../services/localNotification.service';
 
 @Injectable()
 export class BillService {
@@ -13,7 +14,11 @@ export class BillService {
     monthDaysCount : number[] = [31,28,31,30,31,30,31,31,30,31,30,31,31];//13 MONTHS LAST ONE IS JANUARY
     monthDaysLeapYear : number[] = [31,29,31,30,31,30,31,31,30,31,30,31,31];//13 MONTHS LAST ONE IS JANUARY
 
-    constructor(private billDataBase: BillDataBase, private billRecurrentDataBase: BillRecurrentDataBase) {}
+    constructor(
+        private billDataBase: BillDataBase, 
+        private billRecurrentDataBase: BillRecurrentDataBase, 
+        private localNotificationService: LocalNotificationService
+    ) {}
 
     public async getOverdueBill() {
         console.log('getOverdueBill');
@@ -30,7 +35,7 @@ export class BillService {
             if (bill.isRecurrent) {
                 await this.createRecurrentBill(bill);
             } else {
-                await this.billDataBase.createObject(bill);
+                await this.CreateBillCommonInstructions(bill);
             }
         } catch (error: any) {
             console.error(error);
@@ -80,7 +85,7 @@ export class BillService {
 
         
         for (let i = 0; i < listBills.length; i ++) {
-            await this.billDataBase.createObject(listBills[i]);
+            await this.CreateBillCommonInstructions(listBills[i]);
         }
     }
 
@@ -208,5 +213,17 @@ export class BillService {
         auxBill.isRecurrent     = bill.isRecurrent;
 
         return auxBill;
+    }
+
+    private async CreateBillCommonInstructions(bill: Bill) {
+        await this.billDataBase.createObject(bill).then(result => {
+
+            console.log(JSON.stringify(result));
+
+            bill.primaryKey = result.insertId;
+
+            this.localNotificationService.createNotification(bill, 'dueDate');
+            this.localNotificationService.createNotification(bill, 'overdue');
+        });
     }
 }

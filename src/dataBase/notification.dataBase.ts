@@ -24,7 +24,7 @@ export class NotificationDataBase implements DatabaseCRUD {
                 db.executeSql(`
                 CREATE TABLE IF NOT EXISTS notifications (
                     PrimaryKey INTEGER PRIMARY KEY AUTOINCREMENT,
-                    NotificationId TEXT NOT NULL UNIQUE,
+                    NotificationId TEXT NOT NULL UNIQUE CHECK(NotificationId GLOB '[0-9]*'),
                     Type TEXT NOT NULL,
                     Bill INTEGER,
                     FOREIGN KEY (Bill) REFERENCES bills(PrimaryKey)
@@ -49,6 +49,8 @@ export class NotificationDataBase implements DatabaseCRUD {
             try {
                 let insertQuery: InsertQuery = DatabaseUtils.getInsertQuery(notification);
 
+                console.log(JSON.stringify(insertQuery));
+
                 console.log('TRIED TO INSERT');
                 return this.db.executeSql(
                     'INSERT INTO notifications (' + insertQuery.insertQueryFields + ') VALUES (' + insertQuery.insertQueryValuesSize + ')', insertQuery.insertQueryValues
@@ -72,22 +74,8 @@ export class NotificationDataBase implements DatabaseCRUD {
                 let result: any = null;
                 if (query == 'All') {
                     result = await this.db.executeSql(sql, []);
-                } else {
-                    // sql = sql + ' WHERE ';
-                    // Object.keys(query).forEach((key, index) => {
-                    //     if (key === "dueDate") {
-                    //         sql += ` strftime('%m', ${key}) = ? AND strftime('%Y', ${key}) = ?`;
-                    //         values.push(query[key].month);
-                    //         values.push(query[key].year);
-                    //     } else {
-                    //         sql += ` ${key} = ?`;
-                    //         values.push(query[key]);
-                    //     }
-                    //     if (index < Object.keys(query).length - 1) {
-                    //         sql += ' AND';
-                    //     }
-                    // });
-                    // result = await this.db.executeSql(sql, values);
+                    console.log(result);
+                    console.log(JSON.stringify(result));
                 }
 
                 if (result != null && result.rows != null && result.rows.length > 0) {

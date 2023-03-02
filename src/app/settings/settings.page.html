@@ -1,0 +1,36 @@
+<!-- <ion-app> -->
+  <app-global-header></app-global-header>
+  <div class="ion-page" id="main-content">
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>Configurações</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+
+      <p>Permissões essenciais ao aplicativo:</p>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col>Nome</ion-col>
+          <ion-col>Status</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>Notificações</ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <!-- <ion-button expand="full">Home page</ion-button> -->
+
+      
+      <ion-button (click)="verifyScheduledLocalNotification()">Verificar notificações agendadas</ion-button>
+      <ion-button (click)="verifyNotificationDataBaseRecords()">Verificar notificações banco de dados</ion-button>
+
+    </ion-content>
+  </div>
+<!-- <ion-app> -->

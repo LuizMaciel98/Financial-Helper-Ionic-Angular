@@ -30,7 +30,12 @@ const routes: Routes = [
   {
     path: 'list-revenue',
     loadChildren: () => import('./list-revenue/list-revenue.module').then( m => m.ListRevenuePageModule)
+  },  {
+    path: 'settings',
+    loadChildren: () => import('./settings/settings.module').then( m => m.SettingsPageModule)
   },
+
+
 ];
 
 @NgModule({

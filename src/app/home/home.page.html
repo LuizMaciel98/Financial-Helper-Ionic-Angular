@@ -10,10 +10,6 @@
       </ion-toolbar> 
     </ion-header>
     <ion-content>
-
-       
-      <!-- <ion-button id="open-custom-dialog" expand="block">Open Custom Dialog</ion-button> -->
-      
       <ion-modal id="example-modal" #modal [isOpen]="hasOverdueBills" trigger="open-custom-dialog">
         <ng-template>
           <div class="wrapper"> 
@@ -21,9 +17,6 @@
 
             <ion-card>
               <ion-card-header>
-                <!-- <ion-card-title>
-                  
-                </ion-card-title> -->
                 <br/>
                 <ion-grid class="ion-text-center vertical-align-content">
                   <ion-row>
@@ -43,16 +36,6 @@
                 </ion-grid>
               </ion-card-header>
             </ion-card>
-      
-            <!-- <ion-card *ngIf="hasCloseDueDate === true">
-              <ion-card-header>
-                <ion-card-title>Contas a vencer</ion-card-title>
-              </ion-card-header>
-      
-              <ion-card-content>
-                Contas a vencer nos próximos 7 dias
-              </ion-card-content>
-            </ion-card> -->
           </div>
         </ng-template>
       </ion-modal>
@@ -98,7 +81,7 @@
 
           <ion-item>
             <ion-label>
-              <h1>Saldo do mês</h1>
+              <h1>Saldo</h1>
               <p>{{formattedChoosedMonthBalance}}</p>
             </ion-label>
           </ion-item>

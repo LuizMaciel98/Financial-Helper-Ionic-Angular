@@ -15,6 +15,7 @@ import { BillService } from 'src/services/bill.service';
 // import {  } from 'cordova-plugin-android-permissions';
 // import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
 import { Device } from '@capacitor/device';
+import { DatabaseUtils } from 'src/utils/databaseUtils';
 
 @Component({
     selector: 'app-home',
@@ -174,10 +175,45 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy  {
         await this.calculateChoosedMonthRevenues();
         
         this.choosedMonthBalance = this.choosedMonthRevenues - this.choosedMonthExpenses;
-        this.formattedChoosedMonthBalance = await this.currencyPipe.transform(this.choosedMonthBalance, 'BRL', true);
+
+        let previousMonthBallance: number = await this.calculatePreviousMonthsBallance();
+
+        this.formattedChoosedMonthBalance = await this.currencyPipe.transform(previousMonthBallance + this.choosedMonthBalance, 'BRL', true);
 
         await this.barChartMethod();
         this.barChart.update();
+    }
+
+    async calculatePreviousMonthsBallance() {
+        console.log('calculatePreviousMonthsBallance');
+        
+        let queryDate = DatabaseUtils.getDateFormatted(this.choosedDate).slice(0, -2) + this.billService.getMonthTotalDays(this.choosedDate).toString();
+
+        let billsAmount : number = 0;
+        let revenuesAmount : number = 0;
+
+        let bills : Bill[] = await this.billDataBase.executeQuery('select * from bills where dueDate > date(\'1000-01-01\') and dueDate < date(\'' + queryDate + '\')');
+        console.log(JSON.stringify(bills));
+
+        if (bills != undefined) {
+            bills.forEach(currentBill => {
+                if (currentBill.price != null) {
+                    billsAmount += currentBill.price; 
+                }
+            });
+        }
+
+        let revenues : Revenue[] = await this.revenueDataBase.executeQuery('select * from revenues where date > date(\'1000-01-01\') and date < date(\'' + queryDate + '\')');
+        console.log(JSON.stringify(revenues));
+        if (revenues != undefined) {
+            revenues.forEach(currentRevenue => {
+                if (currentRevenue.amount != null) {
+                    revenuesAmount += currentRevenue.amount; 
+                }
+            });
+        }
+
+        return revenuesAmount - billsAmount;
     }
 
     async calculateChoosedMonthExpenses() {

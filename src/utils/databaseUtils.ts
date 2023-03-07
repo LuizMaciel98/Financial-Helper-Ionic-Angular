@@ -38,6 +38,10 @@ export class DatabaseUtils {
             month = '0' + month;
         }
 
+        if (day.length == 1) {
+            day = '0' + day;
+        }
+
         return year + '-' + month + '-' + day;
     }
 

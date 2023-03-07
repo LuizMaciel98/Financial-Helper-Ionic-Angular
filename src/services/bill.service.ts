@@ -20,6 +20,17 @@ export class BillService {
         private localNotificationService: LocalNotificationService
     ) {}
 
+    public getMonthTotalDays(date: Date) {
+        let result: number;
+
+        if (this.isLeapYear(date)) {
+            result = this.monthDaysLeapYear[date.getMonth()];
+        } else {
+            result = this.monthDaysCount[date.getMonth()];
+        }
+        return result;
+    }
+
     public async getOverdueBill() {
         console.log('getOverdueBill');
         let overdueBills: Bill[] = [];
@@ -140,12 +151,12 @@ export class BillService {
 
             for (let i = 0; i < 11; i++) {
                 let currentMonth : number    = currentDate.getMonth();
-                let isLeapYear   : boolean   = currentDate.getFullYear() % 4 == 0;
+                // let isLeapYear   : boolean   = currentDate.getFullYear() % 4 == 0;
             
                 let currentMonthDays : number;
                 let nextMonthDays    : number;
 
-                if (isLeapYear) {
+                if (this.isLeapYear(currentDate)) {
                     currentMonthDays = this.monthDaysLeapYear[currentMonth];
                     nextMonthDays = this.monthDaysLeapYear[currentMonth + 1];
                 } else {
@@ -225,5 +236,9 @@ export class BillService {
             this.localNotificationService.createNotification(bill, 'dueDate');
             this.localNotificationService.createNotification(bill, 'overdue');
         });
+    }
+
+    private isLeapYear(date: Date){
+        return date.getFullYear() % 4 == 0;
     }
 }

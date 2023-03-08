@@ -12,34 +12,12 @@
     <ion-content>
       <ion-modal id="example-modal" #modal [isOpen]="hasOverdueBills" trigger="open-custom-dialog">
         <ng-template>
-          <div class="wrapper"> 
+          <div class="wrapper">
             <h1>Você possuí depesas vencidas!</h1>
-
-            <ion-card>
-              <ion-card-header>
-                <br/>
-                <ion-grid class="ion-text-center vertical-align-content">
-                  <ion-row>
-                    <ion-col>Nome</ion-col>
-                    <ion-col>Preço</ion-col>
-                    <ion-col>Data de Vencimento</ion-col>
-                    <ion-col>Ações</ion-col>
-                  </ion-row>
-                  <ion-row *ngFor="let bill of overdueBills">
-                    <ion-col>{{bill.name}}</ion-col>
-                    <ion-col>R${{bill.price}}</ion-col>
-                    <ion-col>{{bill.dueDate}}</ion-col>
-                    <ion-col>
-                      <ion-button fill="outline" size="small">Pagar</ion-button>
-                    </ion-col>
-                  </ion-row>
-                </ion-grid>
-              </ion-card-header>
-            </ion-card>
+            <app-overdue-modal [overdueBills]="overdueBills"></app-overdue-modal>
           </div>
         </ng-template>
       </ion-modal>
-
       <ion-card>
         <ion-card-header>
           <ion-card-title>Visão Geral</ion-card-title>

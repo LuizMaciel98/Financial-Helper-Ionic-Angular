@@ -141,12 +141,16 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy  {
 
     async calculateCloseAndOverdueBills() {
         console.log('calculateCloseAndOverdueBills');
+
         this.overdueBills = await this.billService.getOverdueBill();
 
-        if (this.overdueBills.length > 0){
-        this.hasOverdueBills = true;
-        }
         console.log('this.overdueBills' + JSON.stringify(this.overdueBills));
+
+        if (this.overdueBills.length > 0){
+            this.hasOverdueBills = true;
+        }
+
+        console.log('this.hasOverdueBills: ' + JSON.stringify(this.hasOverdueBills));
     }
 
     calculateInitialChoosedMonth() {
@@ -268,7 +272,6 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy  {
     
         this.formattedChoosedMonthRevenues = await this.currencyPipe.transform(this.choosedMonthRevenues, 'BRL', true);
     }
-  
 
     navigateToListBill() {
         this.router.navigate(['/list-bill'], { replaceUrl: true });
@@ -278,11 +281,11 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy  {
         this.router.navigate(['/insert-bill'], { replaceUrl: true });
     }
   
-    navigateToInsertRevenue(){
+    navigateToInsertRevenue() {
         this.router.navigate(['/insert-revenue'], { replaceUrl: true });
     }
   
-    navigateToListRevenue(){
+    navigateToListRevenue() {
         this.router.navigate(['/list-revenue'], { replaceUrl: true });
     }
 

@@ -1,0 +1,27 @@
+<ion-card>
+  <ion-card-header>
+    <br/>
+    <ion-grid [fixed]="true" class="ion-text-center vertical-align-content">
+      <ion-row>
+        <ion-col>Nome</ion-col>
+        <ion-col>Preço</ion-col>
+        <ion-col>Data de Vencimento</ion-col>
+        <ion-col>Ações</ion-col>
+      </ion-row>
+      <ion-row *ngFor="let bill of overdueBills">
+        <ion-col>{{bill.name}}</ion-col>
+        <ion-col>R${{bill.price}}</ion-col>
+        <ion-col>{{bill.dueDate}}</ion-col>
+        <ion-col>
+          <ion-button [disabled]="isPaid(bill.primaryKey)" fill="outline" expand="block" size="small" (click)="payBill(bill.primaryKey)">
+            <ion-spinner *ngIf="loading(bill.primaryKey)"></ion-spinner>
+              <ion-label *ngIf="payButtonAvailable(bill.primaryKey)">
+                Pagar
+              </ion-label>
+              <ion-icon *ngIf="isPaid(bill.primaryKey)" class="action-button" size="small" color="blue" name="checkmark-done-sharp"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card-header>
+</ion-card>

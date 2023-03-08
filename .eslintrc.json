@@ -17,6 +17,7 @@
           "before": true,
           "after": true
         }],
+        "no-unused-vars": ["error", { "vars": "local", "args": "none", "ignoreRestSiblings": false }],
         "no-unreachable": ["error"],
         "no-irregular-whitespace": ["error"],
         "no-unused-expressions": ["error"],

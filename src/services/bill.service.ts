@@ -1,18 +1,16 @@
 import { Injectable } from '@angular/core';
-import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
+// import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { Bill } from '../models/bill.model';
 import { BillRecurrent } from '../models/billRecurrent.model';
 import { BillDataBase } from '../dataBase/bill.dataBase';
 import { BillRecurrentDataBase } from '../dataBase/billRecurrent.dataBase';
 import { LocalNotificationService } from '../services/localNotification.service';
+import { DateUtils } from '../utils/dateUtils';
 
 @Injectable()
 export class BillService {
 
     billRecurrent : BillRecurrent | any;
-
-    monthDaysCount : number[] = [31,28,31,30,31,30,31,31,30,31,30,31,31];//13 MONTHS LAST ONE IS JANUARY
-    monthDaysLeapYear : number[] = [31,29,31,30,31,30,31,31,30,31,30,31,31];//13 MONTHS LAST ONE IS JANUARY
 
     constructor(
         private billDataBase: BillDataBase, 
@@ -23,17 +21,17 @@ export class BillService {
     public getMonthTotalDays(date: Date) {
         let result: number;
 
-        if (this.isLeapYear(date)) {
-            result = this.monthDaysLeapYear[date.getMonth()];
+        if (DateUtils.isLeapYear(date)) {
+            result = DateUtils.monthDaysLeapYear[date.getMonth()];
         } else {
-            result = this.monthDaysCount[date.getMonth()];
+            result = DateUtils.monthDaysCount[date.getMonth()];
         }
         return result;
     }
 
     public async getOverdueBill() {
         console.log('getOverdueBill');
-        let overdueBills: Bill[] = [];
+        // let overdueBills: Bill[] = [];
         // try {
         return await this.billDataBase.executeQuery('SELECT * FROM bills WHERE dueDate < DATE(\'now\') AND paid = \'false\'');
         // } catch (exception) {
@@ -73,7 +71,7 @@ export class BillService {
         listBills.push(auxBill);
 
         if (bill.dueDate != null) {
-            let startingDate: Date;
+            // let startingDate: Date;
 
             if (recurrency == 'daily') {
                 auxListBill = this.makeDailyList(bill);
@@ -150,19 +148,9 @@ export class BillService {
             startingDateDay = startingDate.getDate();
 
             for (let i = 0; i < 11; i++) {
-                let currentMonth : number    = currentDate.getMonth();
-                // let isLeapYear   : boolean   = currentDate.getFullYear() % 4 == 0;
             
-                let currentMonthDays : number;
-                let nextMonthDays    : number;
-
-                if (this.isLeapYear(currentDate)) {
-                    currentMonthDays = this.monthDaysLeapYear[currentMonth];
-                    nextMonthDays = this.monthDaysLeapYear[currentMonth + 1];
-                } else {
-                    currentMonthDays = this.monthDaysCount[currentMonth];
-                    nextMonthDays = this.monthDaysCount[currentMonth + 1];
-                }
+                let currentMonthDays : number = DateUtils.getCurrentMonthTotalDays(currentDate);
+                let nextMonthDays    : number = DateUtils.getNextMonthTotalDays(currentDate);
 
                 let newDueDate : Date;
 
@@ -174,9 +162,9 @@ export class BillService {
                     let auxauxDate = new Date(currentDate.setDate(currentDate.getDate() + nextMonthDays));
                     newDueDate = new Date (auxauxDate.getFullYear(), auxauxDate.getMonth(), nextMonthDays);
                 } else {
-                    let auxYear = currentDate.getFullYear();
+                    // let auxYear = currentDate.getFullYear();
                     let auxMonth = currentDate.getMonth();
-                    let auxDay = currentDate.getDate();
+                    // let auxDay = currentDate.getDate();
                     
                     newDueDate = new Date (currentDate.setMonth(auxMonth + 1));
 
@@ -238,7 +226,5 @@ export class BillService {
         });
     }
 
-    private isLeapYear(date: Date){
-        return date.getFullYear() % 4 == 0;
-    }
+    
 }

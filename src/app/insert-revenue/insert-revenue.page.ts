@@ -1,19 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Revenue } from '../../models/revenue.model';
-import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
-import { Router } from '@angular/router';
 import { RevenueDataBase } from '../../dataBase/revenue.dataBase';
-import { tap } from 'rxjs/operators';
-import { Params } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { RevenueFormComponent } from '../components/revenue-form/revenue-form.component';
 
 @Component({
-  selector: 'app-insert-revenue',
-  templateUrl: './insert-revenue.page.html',
-  styleUrls: ['./insert-revenue.page.scss'],
-  providers: [RevenueDataBase, RevenueFormComponent],
+    selector: 'app-insert-revenue',
+    templateUrl: './insert-revenue.page.html',
+    styleUrls: ['./insert-revenue.page.scss'],
+    providers: [RevenueDataBase, RevenueFormComponent],
 })
 export class InsertRevenuePage implements OnInit {
 
@@ -27,15 +23,16 @@ export class InsertRevenuePage implements OnInit {
     }
 
     async onUpsertButtonClick(revenue: Revenue) {
+
         await this.revenueDataBase.createObject(revenue);
 
         this.navCtrl.navigateRoot('home');
         this.navCtrl.pop();
 
         const toast = await this.toastController.create({
-        message: 'Receita criada!',
-        duration: 1500,
-        position: 'top'
+            message: 'Receita criada!',
+            duration: 1500,
+            position: 'top'
         });
 
         await toast.present();

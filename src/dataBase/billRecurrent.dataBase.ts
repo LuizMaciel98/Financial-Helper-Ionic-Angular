@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { BillRecurrent } from '../models/billRecurrent.model';
 import { DatabaseCRUD } from '../interfaces/databaseCRUD';
+import { DatabaseUtils, InsertQuery, UpdateQuery } from 'src/utils/databaseUtils';
 
 @Injectable()
 export class BillRecurrentDataBase implements DatabaseCRUD {
@@ -40,16 +41,16 @@ export class BillRecurrentDataBase implements DatabaseCRUD {
         if (!this.db) {
             await this.createDatabase();
         }
-        const data = [billRecurrent.frequency];
         if (this.db) {
             try {
-                console.log('TRIED TO INSERT');
-                return this.db.executeSql(
-                    'INSERT INTO billsRecurrent (frequency) VALUES (?)',
-                    data
+                let insertQuery: InsertQuery = DatabaseUtils.getInsertQuery(billRecurrent);
+
+                return await this.db.executeSql(
+                    'INSERT INTO billsRecurrent (' + insertQuery.queryFields + ') VALUES (' + insertQuery.queryValuesSize + ')', insertQuery.queryValues
                 );
             } catch (error) {
-                console.error(error);
+                console.log(error);
+                console.log(JSON.stringify(error));
             }
         }
     }
@@ -112,10 +113,14 @@ export class BillRecurrentDataBase implements DatabaseCRUD {
         }
         if (this.db) {
             try {
-                const data = [billRecurrent.frequency, billRecurrent.primaryKey];
-                return this.db.executeSql(`UPDATE billsRecurrent SET frequency=? WHERE primaryKey=?`, data);
+                let updateQuery: UpdateQuery = DatabaseUtils.getUpdateQuery(billRecurrent);
+
+                return await this.db.executeSql(
+                    'UPDATE billsRecurrent SET ' + updateQuery.queryFields + ' WHERE primaryKey=?', updateQuery.queryValues
+                );
             } catch (error) {
-                console.error(error);
+                console.log(error);
+                console.log(JSON.stringify(error));
             }
         }
     }

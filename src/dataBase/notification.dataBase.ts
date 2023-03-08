@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { Notification } from '../models/notification.model';
 import { DatabaseCRUD } from '../interfaces/databaseCRUD';
-import { DatabaseUtils, InsertQuery } from '../utils/databaseUtils';
+import { DatabaseUtils, InsertQuery, UpdateQuery } from '../utils/databaseUtils';
 
 @Injectable()
 export class NotificationDataBase implements DatabaseCRUD {
@@ -41,7 +41,6 @@ export class NotificationDataBase implements DatabaseCRUD {
     }
 
     async createObject(notification : Notification | any) {
-        
         if (!this.db) {
             await this.createDatabase();
         }
@@ -49,14 +48,12 @@ export class NotificationDataBase implements DatabaseCRUD {
             try {
                 let insertQuery: InsertQuery = DatabaseUtils.getInsertQuery(notification);
 
-                console.log(JSON.stringify(insertQuery));
-
-                console.log('TRIED TO INSERT');
                 return this.db.executeSql(
-                    'INSERT INTO notifications (' + insertQuery.insertQueryFields + ') VALUES (' + insertQuery.insertQueryValuesSize + ')', insertQuery.insertQueryValues
+                    'INSERT INTO notifications (' + insertQuery.queryFields + ') VALUES (' + insertQuery.queryValuesSize + ')', insertQuery.queryValues
                 );
             } catch (error) {
-                console.error(error);
+                console.log(error);
+                console.log(JSON.stringify(error));
             }
         }
     }
@@ -70,7 +67,7 @@ export class NotificationDataBase implements DatabaseCRUD {
         if (this.db) {
             try {
                 let sql = 'SELECT * FROM notifications';
-                let values: any[] = [];
+                // let values: any[] = [];
                 let result: any = null;
                 if (query == 'All') {
                     result = await this.db.executeSql(sql, []);
@@ -98,10 +95,14 @@ export class NotificationDataBase implements DatabaseCRUD {
         }
         if (this.db) {
             try {
-                const data = [notification.PrimaryKey, notification.NotificationId, notification.Type];
-                return this.db.executeSql(`UPDATE notifications SET NotificationId=?, Type=? WHERE PrimaryKey=?`, data);
+                let updateQuery: UpdateQuery = DatabaseUtils.getUpdateQuery(notification);
+
+                return await this.db.executeSql(
+                    'UPDATE notifications SET ' + updateQuery.queryFields + ' WHERE primaryKey=?', updateQuery.queryValues
+                );
             } catch (error) {
-                console.error(error);
+                console.log(error);
+                console.log(JSON.stringify(error));
             }
         }
     }

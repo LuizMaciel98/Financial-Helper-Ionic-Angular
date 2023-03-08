@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { Bill } from '../models/bill.model';
 import { DatabaseCRUD } from '../interfaces/databaseCRUD';
-import { DatabaseUtils, InsertQuery } from '../utils/databaseUtils';
+import { DatabaseUtils, InsertQuery, UpdateQuery } from '../utils/databaseUtils';
 
 @Injectable()
 export class BillDataBase implements DatabaseCRUD {
@@ -57,7 +57,7 @@ export class BillDataBase implements DatabaseCRUD {
                 let insertQuery: InsertQuery = DatabaseUtils.getInsertQuery(bill);
 
                 return await this.db.executeSql(
-                    'INSERT INTO bills (' + insertQuery.insertQueryFields + ') VALUES (' + insertQuery.insertQueryValuesSize + ')', insertQuery.insertQueryValues
+                    'INSERT INTO bills (' + insertQuery.queryFields + ') VALUES (' + insertQuery.queryValuesSize + ')', insertQuery.queryValues
                 );
             } catch (error) {
                 console.log(error);
@@ -113,10 +113,14 @@ export class BillDataBase implements DatabaseCRUD {
         }
         if (this.db) {
             try {
-                const data = [bill.primaryKey, bill.name, bill.dueDate, bill.price, bill.paid, bill.category, bill.paymentDate, bill.reminder, bill.notes, bill.billRecurrent];
-                return this.db.executeSql(`UPDATE bills SET name=?, dueDate=?, price=?, paid=?, category=?, paymentDate=?, reminder=?, notes=?, billRecurrent=? WHERE primaryKey=?`, data);
+                let updateQuery: UpdateQuery = DatabaseUtils.getUpdateQuery(bill);
+
+                return await this.db.executeSql(
+                    'UPDATE bills SET ' + updateQuery.queryFields + ' WHERE primaryKey=?', updateQuery.queryValues
+                );
             } catch (error) {
-                console.error(error);
+                console.log(error);
+                console.log(JSON.stringify(error));
             }
         }
     }

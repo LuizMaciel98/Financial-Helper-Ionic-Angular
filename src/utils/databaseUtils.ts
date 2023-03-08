@@ -2,34 +2,71 @@ export class DatabaseUtils {
     
     public constructor (){ }
 
-    static getInsertQuery(object: Object) {
-        let result: InsertQuery = new InsertQuery();
+    public static getUpdateQuery(object: Object) {
+        let result: UpdateQuery = new UpdateQuery();
+
+        let primaryKey: number = 0;
 
         Object.entries(object).map(item => {
-            if (result.insertQueryFields != '') {
-                result.insertQueryFields = result.insertQueryFields + ', ';
-                result.insertQueryValuesSize = result.insertQueryValuesSize + ', ';
-            }
 
-            result.insertQueryFields = result.insertQueryFields + item[0];
-            result.insertQueryValuesSize = result.insertQueryValuesSize + '?';
+            if (result.queryFields != '' && result.queryFields != 'primaryKey') {
 
-            if(item[1] instanceof Date){
-                result.insertQueryValues.push(this.getDateFormatted(item[1]));
+                if (result.queryFields != '') {
+                    result.queryFields = result.queryFields + ', ';
+                    // result.queryValuesSize = result.queryValuesSize + ', ';
+                }
+
+                result.queryFields = result.queryFields + item[0];
+                // result.queryValuesSize = result.queryValuesSize + '?';
+
+                if (item[1] instanceof Date) {
+                    result.queryValues.push(this.getDateFormatted(item[1]));
+                } else {
+                    result.queryValues.push(item[1]);
+                }
+
             } else {
-                result.insertQueryValues.push(item[1]);
+                primaryKey = item[1];
             }
-
         });
 
-        console.log(JSON.stringify(result.insertQueryFields));
-        console.log(JSON.stringify(result.insertQueryValuesSize));
-        console.log(JSON.stringify(result.insertQueryValues));
+        result.queryValues.push(primaryKey);
+
+        console.log(JSON.stringify(result.queryFields));
+        // console.log(JSON.stringify(result.queryValuesSize));
+        console.log(JSON.stringify(result.queryValues));
 
         return result;
     }
 
-    static getDateFormatted(date: Date) {
+    public static getInsertQuery(object: Object) {
+        let result: InsertQuery = new InsertQuery();
+
+        Object.entries(object).map(item => {
+            if (result.queryFields != '') {
+                result.queryFields = result.queryFields + ', ';
+                result.queryValuesSize = result.queryValuesSize + ', ';
+            }
+
+            result.queryFields = result.queryFields + item[0];
+            result.queryValuesSize = result.queryValuesSize + '?';
+
+            if(item[1] instanceof Date){
+                result.queryValues.push(this.getDateFormatted(item[1]));
+            } else {
+                result.queryValues.push(item[1]);
+            }
+
+        });
+
+        console.log(JSON.stringify(result.queryFields));
+        console.log(JSON.stringify(result.queryValuesSize));
+        console.log(JSON.stringify(result.queryValues));
+
+        return result;
+    }
+
+    public static getDateFormatted(date: Date) {
         let year: string = date.getFullYear().toString();
         let month: string = this.convertToOneBased(date.getMonth()).toString();
         let day: string = date.getDate().toString();
@@ -45,7 +82,7 @@ export class DatabaseUtils {
         return year + '-' + month + '-' + day;
     }
 
-    static convertToOneBased(zeroBased: number) {
+    public static convertToOneBased(zeroBased: number) {
         return zeroBased++;
     }
 
@@ -53,8 +90,16 @@ export class DatabaseUtils {
 
 export class InsertQuery {
 
-    insertQueryFields: string = '';
-    insertQueryValuesSize: string = '';
-    insertQueryValues: any[] = [];
+    queryFields: string = '';
+    queryValuesSize: string = '';
+    queryValues: any[] = [];
+
+}
+
+export class UpdateQuery {
+
+    queryFields: string = '';
+    // queryValuesSize: string = '';
+    queryValues: any[] = [];
 
 }

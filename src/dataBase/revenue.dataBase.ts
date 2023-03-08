@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { Revenue } from '../models/revenue.model';
 import { DatabaseCRUD } from '../interfaces/databaseCRUD';
-import { DatabaseUtils, InsertQuery } from 'src/utils/databaseUtils';
+import { DatabaseUtils, InsertQuery, UpdateQuery } from 'src/utils/databaseUtils';
 
 @Injectable()
 export class RevenueDataBase implements DatabaseCRUD {
@@ -51,7 +51,7 @@ export class RevenueDataBase implements DatabaseCRUD {
                 let insertQuery: InsertQuery = DatabaseUtils.getInsertQuery(revenue);
 
                 return await this.db.executeSql(
-                    'INSERT INTO revenues (' + insertQuery.insertQueryFields + ') VALUES (' + insertQuery.insertQueryValuesSize + ')', insertQuery.insertQueryValues
+                    'INSERT INTO revenues (' + insertQuery.queryFields + ') VALUES (' + insertQuery.queryValuesSize + ')', insertQuery.queryValues
                 );
             } catch (error) {
                 console.log(error);
@@ -121,10 +121,14 @@ export class RevenueDataBase implements DatabaseCRUD {
         }
         if (this.db) {
             try {
-                const data = [revenue.name, revenue.type, revenue.amount, revenue.date, revenue.primaryKey,];
-                return this.db.executeSql(`UPDATE revenues SET name=?, type=?, amount=?, date=? WHERE primaryKey=?`, data);
+                let updateQuery: UpdateQuery = DatabaseUtils.getUpdateQuery(revenue);
+
+                return await this.db.executeSql(
+                    'UPDATE revenues SET ' + updateQuery.queryFields + ' WHERE primaryKey=?', updateQuery.queryValues
+                );
             } catch (error) {
-                console.error(error);
+                console.log(error);
+                console.log(JSON.stringify(error));
             }
         }
     }

@@ -16,6 +16,7 @@ import { BillService } from 'src/services/bill.service';
 // import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
 import { Device } from '@capacitor/device';
 import { DatabaseUtils } from 'src/utils/databaseUtils';
+import { DateUtils } from 'src/utils/dateUtils';
 
 @Component({
     selector: 'app-home',
@@ -191,7 +192,7 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy  {
     async calculatePreviousMonthsBallance() {
         console.log('calculatePreviousMonthsBallance');
         
-        let queryDate = DatabaseUtils.getDateFormatted(this.choosedDate).slice(0, -2) + this.billService.getMonthTotalDays(this.choosedDate).toString();
+        let queryDate = DatabaseUtils.getDateFormatted(this.choosedDate).slice(0, -2) + DateUtils.getCurrentMonthTotalDays(this.choosedDate).toString();
 
         let billsAmount : number = 0;
         let revenuesAmount : number = 0;

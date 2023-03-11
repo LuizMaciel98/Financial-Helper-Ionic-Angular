@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LocalNotifications, ScheduleOptions, ScheduleResult, PendingResult, PendingLocalNotificationSchema, LocalNotificationDescriptor } from '@capacitor/local-notifications';
+import { LocalNotifications, ScheduleOptions, ScheduleResult, PendingResult, PendingLocalNotificationSchema, LocalNotificationDescriptor, CancelOptions } from '@capacitor/local-notifications';
 import { Bill } from 'src/models/bill.model';
 import { Notification } from 'src/models/notification.model';
 import { NotificationDataBase } from 'src/dataBase/notification.dataBase';
@@ -187,4 +187,43 @@ export class LocalNotificationService {
       return availableId;
     }
 
+    public async cancelNotifications(localNotifIds: number[]) {
+        let lstLocalNotfDescriptor: LocalNotificationDescriptor[] = [];
+
+        for (let i = 0; i < localNotifIds.length; i++) {
+            let auxLocalNotfDescriptor: LocalNotificationDescriptor = {
+                id: localNotifIds[i]
+            };
+            lstLocalNotfDescriptor.push(auxLocalNotfDescriptor);
+        }
+
+        let cancelOptions: CancelOptions = {
+            notifications: lstLocalNotfDescriptor
+        };
+
+        LocalNotifications.cancel(cancelOptions);
+    }
+
+    public async deleteNotifications(primaryKey: number) {
+
+        let notifications: Notification[] = await this.notificationDataBase.executeQuery('SELECT * FROM notifications WHERE Bill = \'' + primaryKey + '\'');
+        let localNotifIds: any[] = [];
+
+        if (notifications != null && notifications.length > 0) {
+            notifications.forEach(currentNotification => {
+                localNotifIds.push(currentNotification.notificationId);
+            });
+
+            if (localNotifIds != null && localNotifIds.length > 0) {
+                await this.cancelNotifications(localNotifIds);
+            }
+
+            for (let i = 0; i < notifications.length; i++){
+                let currentNotif = notifications[i];
+                if (currentNotif != null && currentNotif.primaryKey != null) {
+                    await this.notificationDataBase.deleteObject(currentNotif.primaryKey.toString());
+                }
+            }
+        }
+    }
 }

@@ -173,21 +173,4 @@ export class RevenueDataBase implements DatabaseCRUD {
         console.log(JSON.stringify(revenues));
         return revenues;
     }
-
-    getRevenueDateFormatted(billDate: Date) {
-        let year: string = billDate.getFullYear().toString();
-        let month: string = this.convertToOneBased(billDate.getMonth()).toString();
-        let day: string = billDate.getDate().toString();
-
-        if (month.length == 1) {
-            month = '0' + month;
-        }
-
-        return year + '-' + month + '-' + day;
-    }
-
-    convertToOneBased(zeroBased: number) {
-        return zeroBased++;
-    }
-
 }

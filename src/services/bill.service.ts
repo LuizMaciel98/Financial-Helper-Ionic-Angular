@@ -4,6 +4,8 @@ import { Bill } from '../models/bill.model';
 import { BillRecurrent } from '../models/billRecurrent.model';
 import { BillDataBase } from '../dataBase/bill.dataBase';
 import { BillRecurrentDataBase } from '../dataBase/billRecurrent.dataBase';
+import { NotificationDataBase } from '../dataBase/notification.dataBase';
+// import { Notification } from '../models/notification.model';
 import { LocalNotificationService } from '../services/localNotification.service';
 import { DateUtils } from '../utils/dateUtils';
 
@@ -15,18 +17,27 @@ export class BillService {
     constructor(
         private billDataBase: BillDataBase, 
         private billRecurrentDataBase: BillRecurrentDataBase, 
-        private localNotificationService: LocalNotificationService
+        private localNotificationService: LocalNotificationService,
+        private notificationDataBase: NotificationDataBase
     ) {}
 
-    public getMonthTotalDays(date: Date) {
-        let result: number;
+    public async payBill(bill: Bill) {
+        console.log('payBill');
 
-        if (DateUtils.isLeapYear(date)) {
-            result = DateUtils.monthDaysLeapYear[date.getMonth()];
-        } else {
-            result = DateUtils.monthDaysCount[date.getMonth()];
+        bill.paid = true;
+        if (bill != null && bill.primaryKey != null) {
+            await this.billDataBase.updateObjects(bill);
+            await this.localNotificationService.deleteNotifications(bill.primaryKey);
         }
-        return result;
+
+        return bill;
+    }
+
+    public async deleteBill(bill: Bill) {
+        if (bill != null && bill.primaryKey != null) {
+            await this.billDataBase.deleteObject(bill.primaryKey.toString());
+            await this.localNotificationService.deleteNotifications(bill.primaryKey);
+        }
     }
 
     public async getOverdueBill() {
@@ -225,6 +236,4 @@ export class BillService {
             this.localNotificationService.createNotification(bill, 'overdue');
         });
     }
-
-    
 }

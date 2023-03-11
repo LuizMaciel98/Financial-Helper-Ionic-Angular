@@ -16,35 +16,60 @@ export class GlobalHeaderComponent implements OnInit {
         this.navCtrl.navigateRoot('home');
         this.navCtrl.pop();
     }
+
+    navigateToBillsListView() {
+        this.navCtrl.navigateRoot('bills-list-view');
+        this.navCtrl.pop();
+    }
     
     navigateToListBill() {
         this.navCtrl.navigateRoot('list-bill');
         this.navCtrl.pop();
-        // this.router.navigate(['/list-bill']);
     }
     
     navigateToInsertBill() {
         this.navCtrl.navigateRoot('insert-bill');
         this.navCtrl.pop();
-        // this.router.navigate(['/insert-bill']);
     }
-    
-    navigateToInsertRevenue(){
-        this.navCtrl.navigateRoot('insert-revenue');
+
+    navigateToRevenuesListView() {
+        this.navCtrl.navigateRoot('revenues-list-view');
         this.navCtrl.pop();
-        // this.router.navigate(['/insert-revenue']);
     }
     
-    navigateToListRevenue(){
+    navigateToListRevenue() {
         this.navCtrl.navigateRoot('list-revenue');
         this.navCtrl.pop();
     }
+
+    navigateToInsertRevenue() {
+        this.navCtrl.navigateRoot('insert-revenue');
+        this.navCtrl.pop();
+    }
     
-    navigateToSettings(){
+    
+    navigateToSettings() {
         this.navCtrl.navigateRoot('settings');
         this.navCtrl.pop();
     }
 
-  ngOnInit() {}
+    navigateToDefineObjectives() {
+        this.navCtrl.navigateRoot('define-objectives');
+        this.navCtrl.pop();
+    }
+
+    navigateToInvestmentsSimulation() {
+        this.navCtrl.navigateRoot('investments-simulation');
+        this.navCtrl.pop();
+    }
+    
+    navigateToReports() {
+        this.navCtrl.navigateRoot('reports');
+        this.navCtrl.pop();
+    }
+
+    ngOnInit() {
+        console.log('');
+    }
 
 }

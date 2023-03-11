@@ -40,19 +40,19 @@ export class OverdueModalComponent implements OnInit {
             let currentBill: Bill = this.overdueBills[i];
 
             
-            console.log("currentBill: " + JSON.stringify(currentBill));
+            // console.log("currentBill: " + JSON.stringify(currentBill));
             if (currentBill.primaryKey == primaryKey) {
-                this.overdueBills[i].paid = true;
+                // this.overdueBills[i].paid = true;
                 bill = currentBill;
-                bill.paid = true;
+                // bill.paid = true;
             }
         }
         
-        console.log("this.overdueBills: " + JSON.stringify(this.overdueBills));
+        // console.log("this.overdueBills: " + JSON.stringify(this.overdueBills));
         
 
-        this.billDataBase.updateObjects(bill).then(result => {
-            console.log(JSON.stringify(result));
+        this.billService.payBill(bill).then(result => {
+            // console.log(JSON.stringify(result));
             this.beignPaidBills.splice(this.beignPaidBills.indexOf(primaryKey),1);
             this.paidBills.push(primaryKey);
         });

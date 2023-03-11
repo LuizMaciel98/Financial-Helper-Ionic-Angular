@@ -4,14 +4,74 @@
       <ion-title>Menu</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-content class="ion-padding">
-    <div class="ion-text-center"> 
-      <ion-button expand="full" (click)="navigateToHome()">Home page</ion-button>
-      <ion-button expand="full" (click)="navigateToInsertBill()">Inserir uma despesa</ion-button>
-      <ion-button expand="full" (click)="navigateToListBill()">Lista de despesas</ion-button>
-      <ion-button expand="full" (click)="navigateToInsertRevenue()">Inserir uma receita</ion-button>
-      <ion-button expand="full" (click)="navigateToListRevenue()">Lista de receitas</ion-button>
-      <ion-button expand="full" (click)="navigateToSettings()">Configurações</ion-button>
+  <ion-content> <!-- class="ion-padding" -->
+    <div > <!-- class="ion-text-center" -->
+      <ion-list>
+        <ion-item (click)="navigateToHome()">
+          <ion-icon slot="start" name="home"></ion-icon>
+          <ion-label>
+            Página principal
+          </ion-label>
+          <ion-icon name="chevron-forward"></ion-icon>
+        </ion-item>
+
+        <ion-item (click)="navigateToBillsListView()">
+          <ion-icon slot="start" name="pricetags"></ion-icon>
+          <ion-label>
+            Despesas
+          </ion-label>
+          <ion-icon name="chevron-forward"></ion-icon>
+        </ion-item>
+
+        <ion-item (click)="navigateToRevenuesListView()">
+          <ion-icon slot="start" name="cash"></ion-icon>
+          <ion-label>
+            Receitas
+          </ion-label>
+          <ion-icon name="chevron-forward"></ion-icon>
+        </ion-item>
+
+        <ion-item (click)="navigateToReports()">
+          <ion-icon slot="start" name="analytics"></ion-icon>
+          <ion-label>
+            Relatórios
+          </ion-label>
+          <ion-icon name="chevron-forward"></ion-icon>
+        </ion-item>
+
+        <ion-list-header>
+          <ion-label>Planejamento</ion-label>
+        </ion-list-header>
+
+        <ion-item (click)="navigateToDefineObjectives()">
+          <ion-icon slot="start" name="star"></ion-icon>
+          <ion-label>
+            Definir Objetivos
+          </ion-label>
+          <ion-icon name="chevron-forward"></ion-icon>
+        </ion-item>
+
+        <ion-item (click)="navigateToInvestmentsSimulation()">
+          <ion-icon slot="start" name="calculator"></ion-icon>
+          <ion-label>
+            Simular Investimento
+          </ion-label>
+          <ion-icon name="chevron-forward"></ion-icon>
+        </ion-item>
+        
+        <ion-list-header>
+          <ion-label>Opções Avançadas</ion-label>
+        </ion-list-header>
+
+        <ion-item (click)="navigateToSettings()">
+          <ion-icon slot="start" name="settings"></ion-icon>
+          <ion-label>
+            Configurações
+          </ion-label>
+          <ion-icon name="chevron-forward"></ion-icon>
+        </ion-item>
+
+      </ion-list>
     </div>
   </ion-content>
 </ion-menu>

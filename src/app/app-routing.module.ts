@@ -30,10 +30,33 @@ const routes: Routes = [
   {
     path: 'list-revenue',
     loadChildren: () => import('./list-revenue/list-revenue.module').then( m => m.ListRevenuePageModule)
-  },  {
+  },
+  {
     path: 'settings',
     loadChildren: () => import('./settings/settings.module').then( m => m.SettingsPageModule)
   },
+  {
+    path: 'define-objectives',
+    loadChildren: () => import('./define-objectives/define-objectives.module').then( m => m.DefineObjectivesPageModule)
+  },
+  {
+    path: 'investments-simulation',
+    loadChildren: () => import('./investments-simulation/investments-simulation.module').then( m => m.InvestmentsSimulationPageModule)
+  },
+  {
+    path: 'reports',
+    loadChildren: () => import('./reports/reports.module').then( m => m.ReportsPageModule)
+  },
+  {
+    path: 'revenues-list-view',
+    loadChildren: () => import('./revenues-list-view/revenues-list-view.module').then( m => m.RevenuesListViewPageModule)
+  },
+  {
+    path: 'bills-list-view',
+    loadChildren: () => import('./bills-list-view/bills-list-view.module').then( m => m.BillsListViewPageModule)
+  },
+
+
 
 
 ];

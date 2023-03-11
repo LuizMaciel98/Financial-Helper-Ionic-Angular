@@ -119,4 +119,31 @@ export class NotificationDataBase implements DatabaseCRUD {
             }
         }
     }
+
+    async executeQuery(query:string) {
+        let revenues:any = [];
+        
+        console.log('executeQuery');
+        console.log(JSON.stringify(query));
+        if (!this.db) {
+            await this.createDatabase();
+        }
+        if (this.db) {
+            try {
+                console.log(JSON.stringify(this.db));
+                console.log('executeQuery 2');
+                let result = await this.db.executeSql(query, []);
+                for (let i = 0; i < result.rows.length; i++) {
+                    revenues.push(result.rows.item(i));
+                }
+            } catch (error) {
+                console.log('executeQuery error');
+                console.log(error);
+                console.log(JSON.stringify(error));
+            }
+        }
+
+        console.log(JSON.stringify(revenues));
+        return revenues;
+    }
 }

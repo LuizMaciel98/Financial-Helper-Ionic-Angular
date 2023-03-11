@@ -33,9 +33,9 @@ export class DateUtils {
         let result: number = 0;
 
         if (this.isLeapYear(date)) {
-            result = DataUtils.monthDaysLeapYear[currentMonth];
+            result = DateUtils.monthDaysLeapYear[currentMonth];
         } else {
-            result = DataUtils.monthDaysCount[currentMonth];
+            result = DateUtils.monthDaysCount[currentMonth];
         }
 
         return result;

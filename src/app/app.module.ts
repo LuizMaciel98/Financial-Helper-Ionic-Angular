@@ -15,7 +15,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 // import { BillFormComponent } from './bill-form/bill-form.component';
 
+import { BillDataBase } from '../dataBase/bill.dataBase';
+import { BillRecurrentDataBase } from '../dataBase/billRecurrent.dataBase';
 import { NotificationDataBase } from '../dataBase/notification.dataBase';
+import { RevenueDataBase } from '../dataBase/revenue.dataBase';
+
 import { LocalNotificationService } from '../services/localNotification.service';
 
 
@@ -31,7 +35,10 @@ import { LocalNotificationService } from '../services/localNotification.service'
   providers: [
     SQLite, 
     SQLitePorter, 
+    BillDataBase,
+    BillRecurrentDataBase,
     NotificationDataBase,
+    RevenueDataBase,
     LocalNotificationService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],

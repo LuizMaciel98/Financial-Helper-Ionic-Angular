@@ -1,5 +1,7 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ModalController, IonModal } from '@ionic/angular';
+
+import { OverlayEventDetail } from '@ionic/core/components';
 
 import { BillDataBase } from '../../dataBase/bill.dataBase';
 import { Bill } from '../../models/bill.model';
@@ -18,12 +20,21 @@ import { Device } from '@capacitor/device';
 import { DatabaseUtils } from 'src/utils/databaseUtils';
 import { DateUtils } from 'src/utils/dateUtils';
 
+import SwiperCore, { Autoplay, Keyboard, Pagination, Scrollbar, Zoom, Navigation } from 'swiper';
+import { IonicSlides } from '@ionic/angular';
+
+SwiperCore.use([Autoplay, Keyboard, Pagination, Scrollbar, Zoom, IonicSlides, Navigation]);
+
+
 @Component({
     selector: 'app-home',
     templateUrl: 'home.page.html',
     styleUrls: ['home.page.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class HomePage implements OnInit, AfterViewInit, OnDestroy  {
+    @ViewChild('modalFirstAccess') modal: IonModal | any;
+
     choosedYear: string;
     choosedMonth: string;
     choosedDate: Date;
@@ -140,6 +151,23 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy  {
         
     }
 
+    cancel() {
+        console.log(JSON.stringify(this.modal));
+
+        this.modal.dismiss(null, 'cancel');
+    }
+    
+    confirm() {
+        this.modal.dismiss();
+    }
+    
+    onWillDismiss(event: Event) {
+        const ev = event as CustomEvent<OverlayEventDetail<string>>;
+        if (ev.detail.role === 'confirm') {
+        //   this.message = `Hello, ${ev.detail.data}!`;
+        }
+    }
+
     async calculateCloseAndOverdueBills() {
         console.log('calculateCloseAndOverdueBills');
 
@@ -197,7 +225,7 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy  {
         let billsAmount : number = 0;
         let revenuesAmount : number = 0;
 
-        let bills : Bill[] = await this.billDataBase.executeQuery('select * from bills where dueDate > date(\'1000-01-01\') and dueDate < date(\'' + queryDate + '\')');
+        let bills : Bill[] = await this.billDataBase.executeQuery('select * from bills where dueDate > date(\'1000-01-01\') and dueDate <= date(\'' + queryDate + '\')');
         console.log(JSON.stringify(bills));
 
         if (bills != undefined) {

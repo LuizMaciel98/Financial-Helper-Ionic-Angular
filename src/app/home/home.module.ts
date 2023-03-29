@@ -16,6 +16,7 @@ import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { CurrencyPipe } from '@angular/common';
 import { NgChartsModule } from 'ng2-charts';
 import { SharedModule } from '../shared/shared.module';
+import { SwiperModule } from 'swiper/angular';
 // import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
 
 @NgModule({
@@ -31,7 +32,8 @@ import { SharedModule } from '../shared/shared.module';
     ]),
     HttpClientModule,
     NgChartsModule,
-    SharedModule
+    SharedModule,
+    SwiperModule
   ],
   providers: [
     BillDataBase,

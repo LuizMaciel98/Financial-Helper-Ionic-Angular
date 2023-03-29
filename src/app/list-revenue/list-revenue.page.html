@@ -29,20 +29,20 @@
           </ion-label>
         </ion-item>
       </ion-list>
-    <ion-grid *ngIf="showTableItems">
-    <ion-row>
-    <ion-col>Name</ion-col>
-    <ion-col>Type</ion-col>
-    <ion-col>Amount</ion-col>
-    <ion-col>Date</ion-col>
-    </ion-row>
-    <ion-row *ngFor="let revenue of revenues">
-    <ion-col>{{ revenue.name }}</ion-col>
-    <ion-col>{{ revenue.type }}</ion-col>
-    <ion-col>{{ revenue.amount }}</ion-col>
-    <ion-col>{{ revenue.date }}</ion-col>
-    </ion-row>
-    </ion-grid>
+      <ion-grid *ngIf="showTableItems">
+        <ion-row>
+          <ion-col>Name</ion-col>
+          <ion-col>Type</ion-col>
+          <ion-col>Amount</ion-col>
+          <ion-col>Date</ion-col>
+        </ion-row>
+        <ion-row *ngFor="let revenue of revenues">
+          <ion-col>{{ revenue.name }}</ion-col>
+          <ion-col>{{ revenue.type }}</ion-col>
+          <ion-col>{{ revenue.amount }}</ion-col>
+          <ion-col>{{ revenue.date }}</ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-content>
   </div>
 </ion-app>

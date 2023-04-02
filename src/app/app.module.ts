@@ -3,17 +3,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { IonicStorageModule } from '@ionic/storage-angular';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-// import { IonicStorageModule } from '@ionic/storage-angular';
-// import { NgxMaskModule } from 'ngx-mask';
-import {IonicInputMaskModule} from "@thiagoprz/ionic-input-mask";
-// import { BillService } from '../../services/bill.service';
+import { IonicInputMaskModule } from "@thiagoprz/ionic-input-mask";
 import { SQLite } from '@ionic-native/sqlite/ngx';
 import { HttpClientModule } from '@angular/common/http';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
-// import { BillFormComponent } from './bill-form/bill-form.component';
 
 import { BillDataBase } from '../dataBase/bill.dataBase';
 import { BillRecurrentDataBase } from '../dataBase/billRecurrent.dataBase';
@@ -21,6 +18,12 @@ import { NotificationDataBase } from '../dataBase/notification.dataBase';
 import { RevenueDataBase } from '../dataBase/revenue.dataBase';
 
 import { LocalNotificationService } from '../services/localNotification.service';
+
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { environment } from '../environments/environment';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { provideStorage, getStorage } from '@angular/fire/storage';
 
 
 @NgModule({
@@ -30,7 +33,12 @@ import { LocalNotificationService } from '../services/localNotification.service'
     IonicModule.forRoot(), 
     AppRoutingModule, 
     IonicInputMaskModule, 
-    HttpClientModule
+    HttpClientModule,
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore()),
+    provideStorage(() => getStorage()),
+    IonicStorageModule.forRoot(),
   ],
   providers: [
     SQLite, 

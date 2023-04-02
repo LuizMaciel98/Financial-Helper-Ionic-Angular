@@ -4,6 +4,7 @@ import { BillFormModule } from '../components/bill-form/bill-form.module';
 import { RevenueFormsModule } from '../components/revenue-form/revenue-form.module';
 import { GlobalHeaderModule } from '../components/global-header/global-header.module';
 import { OverdueModalModule } from '../components/overdue-modal/overdue-modal.module';
+import { RevenuesListModule } from '../components/revenues-list/revenues-list.module';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
@@ -14,6 +15,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     RevenueFormsModule,
     GlobalHeaderModule,
     OverdueModalModule,
+    RevenuesListModule,
   ],
   exports: [
     ReactiveFormsModule,
@@ -21,6 +23,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     RevenueFormsModule,
     GlobalHeaderModule,
     OverdueModalModule,
+    RevenuesListModule,
   ]
 })
 export class SharedModule { }

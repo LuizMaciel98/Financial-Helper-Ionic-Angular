@@ -11,6 +11,7 @@ export class RevenuesListViewPage implements OnInit {
     constructor(private navCtrl: NavController) { }
 
     ngOnInit() {
+        console.log();
     }
 
     navigateToInsertRevenue() {

@@ -17,6 +17,11 @@ import { SharedModule } from '../shared/shared.module';
     RevenuesListViewPageRoutingModule,
     SharedModule
   ],
-  declarations: [RevenuesListViewPage]
+  declarations: [
+    RevenuesListViewPage
+  ],
+  exports: [
+    RevenuesListViewPage
+  ]
 })
 export class RevenuesListViewPageModule {}

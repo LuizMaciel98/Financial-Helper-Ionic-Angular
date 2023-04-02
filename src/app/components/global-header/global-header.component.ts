@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Router } from '@angular/router';
+// import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
+
+import { getAuth } from '@angular/fire/auth';
+import { AuthService } from 'src/services/auth.service';
+
+
 
 @Component({
     selector: 'app-global-header',
@@ -9,8 +14,36 @@ import { NavController } from '@ionic/angular';
     styleUrls: ['./global-header.component.scss'],
 })
 export class GlobalHeaderComponent implements OnInit {
+    
+    auth = getAuth();
+    user = this.auth.currentUser;
 
-  constructor(private navCtrl: NavController) { }
+    displayName : string | any;
+
+    constructor(private navCtrl: NavController, private authService: AuthService) {
+        if (this.user) {
+            console.log('firebase');
+            console.log(this.user);
+            console.log(JSON.stringify(this.user));
+            // User is signed in, see docs for a list of available properties
+            // https://firebase.google.com/docs/reference/js/firebase.User
+
+            if (this.user.displayName == null) {
+                this.displayName = this.user.email;
+            } else {                
+                this.displayName = this.user.displayName;
+            }
+
+
+            // console.log(displayName);
+            // ...
+        } else {
+        // No user is signed in.
+        }
+    }
+
+
+    
 
     navigateToHome() {
         this.navCtrl.navigateRoot('home');
@@ -65,6 +98,13 @@ export class GlobalHeaderComponent implements OnInit {
     
     navigateToReports() {
         this.navCtrl.navigateRoot('reports');
+        this.navCtrl.pop();
+    }
+
+    async logout() {
+        console.log('logout');
+        await this.authService.logout();
+        this.navCtrl.navigateRoot('login');
         this.navCtrl.pop();
     }
 

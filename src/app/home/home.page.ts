@@ -20,10 +20,7 @@ import { Device } from '@capacitor/device';
 import { DatabaseUtils } from 'src/utils/databaseUtils';
 import { DateUtils } from 'src/utils/dateUtils';
 
-import SwiperCore, { Autoplay, Keyboard, Pagination, Scrollbar, Zoom, Navigation } from 'swiper';
-import { IonicSlides } from '@ionic/angular';
-
-SwiperCore.use([Autoplay, Keyboard, Pagination, Scrollbar, Zoom, IonicSlides, Navigation]);
+import { ConfigurationService } from 'src/services/configurations.service';
 
 
 @Component({
@@ -57,6 +54,10 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy  {
 
     overdueBills: Bill[] = [];
 
+    isAppFirstTimeOpened: boolean = false;
+
+    isWelcomeModalOpen: boolean = false;
+
     constructor(
         public modalCtrl: ModalController,
         private router: Router,
@@ -66,6 +67,7 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy  {
         private currencyPipe: CurrencyPipe,
         private actionSheetCtrl: ActionSheetController,
         private localNotificationService: LocalNotificationService,
+        private configurationService: ConfigurationService
         // private androidPermissions: AndroidPermissions
     ) {
 
@@ -91,6 +93,14 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy  {
     async ngOnInit() {
         await this.calculateInitialChoosedMonth();
         await this.calculateChoosedMonth();
+        this.isAppFirstTimeOpened = await this.configurationService.isAppFirstTimeOpened() as boolean;
+        
+        console.log('ngOnInit');
+        console.log(JSON.stringify(this.isAppFirstTimeOpened));
+        if (this.isAppFirstTimeOpened == true) {
+            this.isWelcomeModalOpen = true;
+        }
+        console.log(JSON.stringify(this.isWelcomeModalOpen));
     }
 
     ionViewWillEnter() {
@@ -397,9 +407,8 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy  {
         return result;
     }
 
-
-    testButton() {
-        console.log('testButton');
+    toggleWelcomeModal() {
+        this.isWelcomeModalOpen = !this.isWelcomeModalOpen;
     }
 
     async presentActionSheet() {

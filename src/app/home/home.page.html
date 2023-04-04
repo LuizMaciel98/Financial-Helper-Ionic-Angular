@@ -19,62 +19,10 @@
         </ng-template>
       </ion-modal>
 
-      <!-- <ion-content class="ion-padding"> -->
-        <!-- <ion-button id="open-modal" expand="block">Open</ion-button> -->
-        <!-- <p>{{ message }}</p> -->
-        <ion-modal #modalFirstAccess trigger="open-modal" (willDismiss)="onWillDismiss($event)">
+        <ion-modal #modalFirstAccess trigger="open-modal" [isOpen]="isWelcomeModalOpen" (willDismiss)="onWillDismiss($event)">
           <ng-template>
-            <!-- <ion-header>
-              <ion-toolbar>
-                <ion-buttons slot="start">
-                  <ion-button (click)="cancel()">Cancel</ion-button>
-                </ion-buttons>
-                <ion-title>Welcome</ion-title>
-                <ion-buttons slot="end">
-                  <ion-button (click)="confirm()" [strong]="true">Confirm</ion-button>
-                </ion-buttons>
-              </ion-toolbar>
-            </ion-header> -->
             <ion-content class="ion-padding">
-              <!-- <ion-item>
-                <ion-label position="stacked">Enter your name</ion-label>
-                <ion-input type="text" placeholder="Your name" [(ngModel)]="name"></ion-input>
-              </ion-item> -->
-              <swiper style="height: 100%;" [pagination]="true"> 
-                <ng-template swiperSlide>
-                  <ion-content class="ion-padding">
-                    
-
-                    <p>Olá e bem-vindo ao nosso aplicativo de finanças pessoais!</p> 
-                    
-                    <p>Estamos animados em tê-lo como usuário e esperamos que esta 
-                      plataforma ajude você a gerenciar suas finanças de forma mais 
-                      eficiente e inteligente.</p>
-
-                    <p>Nós nos esforçamos para fornecer a você as melhores ferramentas 
-                      e recursos para ajudá-lo a alcançar suas metas financeiras.
-                      Então, comece a explorar o aplicativo e aproveite ao máximo sua 
-                      experiência de gerenciamento financeiro!</p>
-
-                    <br/>
-
-                    <ion-footer collapse="fade">
-                      <ion-toolbar>
-                        <ion-button fill="clear">Pular Introdução</ion-button>
-                      </ion-toolbar>
-                    </ion-footer>
-
-                  </ion-content>
-                </ng-template>
-                <ng-template swiperSlide>  
-                  <p>Visão geral das ferramentas</p>
-                </ng-template>
-                <ng-template swiperSlide>
-                  <p>Slide 2</p>
-                </ng-template>
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
-              </swiper>
+              <app-welcome-app-swiper (toggleWelcomeModalEvent)="toggleWelcomeModal()"></app-welcome-app-swiper>
             </ion-content>
           </ng-template>
         </ion-modal>

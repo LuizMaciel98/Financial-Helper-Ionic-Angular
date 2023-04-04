@@ -5,6 +5,7 @@ import { RevenueFormsModule } from '../components/revenue-form/revenue-form.modu
 import { GlobalHeaderModule } from '../components/global-header/global-header.module';
 import { OverdueModalModule } from '../components/overdue-modal/overdue-modal.module';
 import { RevenuesListModule } from '../components/revenues-list/revenues-list.module';
+import { WelcomeAppSwiperModule } from '../components/welcome-app-swiper/welcome-app-swiper.module';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
@@ -16,6 +17,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     GlobalHeaderModule,
     OverdueModalModule,
     RevenuesListModule,
+    WelcomeAppSwiperModule,
   ],
   exports: [
     ReactiveFormsModule,
@@ -24,6 +26,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     GlobalHeaderModule,
     OverdueModalModule,
     RevenuesListModule,
+    WelcomeAppSwiperModule,
   ]
 })
 export class SharedModule { }

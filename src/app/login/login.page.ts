@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { AuthService } from '../../services/auth.service';
 
@@ -60,9 +60,33 @@ export class LoginPage implements OnInit {
 		if (user) {
 			this.router.navigateByUrl('/home', { replaceUrl: true });
 		} else {
-			this.showAlert('Login failed', 'Please try again!');
+			this.showAlert('Falha ao logar', 'O email ou a senha estão incorretos!');
 		}
 	}
+	
+	forgotPassword() {
+		const params: NavigationExtras = {
+			queryParams: {email: this.email.value},
+		};
+		console.log(params);
+		console.log(JSON.stringify(params));
+		this.router.navigate(['forgot-password'], params);
+	}
+
+	// async signInWithGmail() {
+	// 	const loading = await this.loadingController.create();
+	// 	await loading.present();
+
+	// 	// const user = await this.authService.login(this.credentials.value);
+	// 	await this.authService.signInWithGmail();
+	// 	await loading.dismiss();
+
+	// 	// if (user) {
+	// 	// 	this.router.navigateByUrl('/home', { replaceUrl: true });
+	// 	// } else {
+	// 	// 	this.showAlert('Login failed', 'Please try again!');
+	// 	// }
+	// }
 
 	async showAlert(header : any, message : any) {
 		const alert = await this.alertController.create({

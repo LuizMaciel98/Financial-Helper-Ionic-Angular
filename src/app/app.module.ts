@@ -18,6 +18,7 @@ import { NotificationDataBase } from '../dataBase/notification.dataBase';
 import { RevenueDataBase } from '../dataBase/revenue.dataBase';
 
 import { LocalNotificationService } from '../services/localNotification.service';
+import { ConfigurationService } from '../services/configurations.service';
 
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../environments/environment';
@@ -48,6 +49,7 @@ import { provideStorage, getStorage } from '@angular/fire/storage';
     NotificationDataBase,
     RevenueDataBase,
     LocalNotificationService,
+    ConfigurationService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [

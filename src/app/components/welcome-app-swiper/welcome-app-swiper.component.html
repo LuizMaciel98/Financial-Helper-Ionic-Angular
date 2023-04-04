@@ -1,0 +1,34 @@
+<swiper style="height: 100%;" [pagination]="true"> 
+  <ng-template swiperSlide>
+    <ion-content class="ion-padding">
+
+      <ion-img class="app-photo" src="../../../assets/icon/icon.png"></ion-img>
+
+      <p>Obrigado e bem-vindo ao nosso aplicativo de finanças pessoais!</p> 
+
+      <p>Estamos animados em tê-lo como usuário e esperamos que esta 
+        plataforma ajude você a gerenciar suas finanças de forma mais 
+        eficiente e inteligente.</p>
+
+      <p>Nós nos esforçamos para fornecer a você as melhores ferramentas 
+        e recursos para ajudá-lo a alcançar suas metas financeiras.
+        Então, comece a explorar o aplicativo e aproveite ao máximo sua 
+        experiência de gerenciamento financeiro!</p>
+
+      <!-- <p>Arraste para a direita para ver saber mais sobre o aplicativo</p> -->
+
+      <br/>
+      <ion-toolbar>
+        <ion-button fill="clear" (click)="toggleWelcomeModal()">Ir para tela inicial</ion-button>
+      </ion-toolbar>
+    </ion-content>
+  </ng-template>
+
+  <!-- <ng-template swiperSlide>  
+    <p>Visão geral das ferramentas</p>
+  </ng-template>
+
+  <ng-template swiperSlide>
+    <p>Slide 2</p>
+  </ng-template> -->
+</swiper>

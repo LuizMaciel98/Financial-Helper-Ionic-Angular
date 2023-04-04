@@ -16,11 +16,11 @@ const routes: Routes = [
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule),
     ...canActivate(redirectUnauthorizedToLogin)
   },
-  {
-    path: '**',
-    redirectTo: '',
-    pathMatch: 'full'
-  },
+  // {
+  //   path: '**',
+  //   redirectTo: '',
+  //   pathMatch: 'full'
+  // },
   {
     path: 'insert-bill',
     loadChildren: () => import('./insert-bill/insert-bill.module').then( m => m.InsertBillPageModule)
@@ -68,7 +68,11 @@ const routes: Routes = [
   {
     path: 'login',
     loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
+  },  {
+    path: 'forgot-password',
+    loadChildren: () => import('./forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule)
   },
+
 
 
 

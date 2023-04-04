@@ -51,6 +51,7 @@ export class GlobalHeaderComponent implements OnInit {
     }
 
     navigateToBillsListView() {
+        console.log('navigateToBillsListView');
         this.navCtrl.navigateRoot('bills-list-view');
         this.navCtrl.pop();
     }
